@@ -174,7 +174,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="supplier" class="block text-sm font-medium text-gray-800">Supplier</label>
-          <select id="supplier" bind:value={$formData.supplier} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" required>
+          <select id="supplier" bind:value={$formData.supplier} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm " required>
             <option value="" disabled>Select a supplier</option>
             {#each $suppliers as supplier}
               <option value={supplier}>{supplier}</option>
@@ -183,7 +183,7 @@
         </div>
         <div>
           <label for="buyer" class="block text-sm font-medium text-gray-800">Buyer</label>
-          <select id="buyer" bind:value={$formData.buyer} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" required>
+          <select id="buyer" bind:value={$formData.buyer} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm " required>
             <option value="" disabled>Select a buyer</option>
             {#each $buyers as buyer}
               <option value={buyer}>{buyer}</option>
@@ -196,15 +196,26 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="partcode" class="block text-sm font-medium text-gray-800">Partcode</label>
-          <input id="partcode" type="text" bind:value={$formData.partcode} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" required />
+          <input 
+            id="partcode" 
+            type="text" 
+            bind:value={$formData.partcode} 
+            class="mt-2 block w-full rounded-lg  shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500" 
+            required  
+          />
         </div>
         <div>
           <label for="serial_number" class="block text-sm font-medium text-gray-800">Serial Number</label>
-          <input id="serial_number" type="text" bind:value={$formData.serial_number} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" required />
+          <input 
+            id="serial_number" 
+            type="text" 
+            bind:value={$formData.serial_number} 
+            class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500" 
+            required 
+          />
         </div>
       </div>
-
-      <!-- Quantity and Unit Price -->
+      
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="qty" class="block text-sm font-medium text-gray-800">Quantity</label>
@@ -215,12 +226,11 @@
           <input id="unit_price_per_qty" type="number" step="0.01" bind:value={$formData.unit_price_per_qty} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" required />
         </div>
       </div>
-
-      <!-- PO Number, PO Date, Invoice Number, Invoice Date -->
+  
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="po_no" class="block text-sm font-medium text-gray-800">P.O. Number</label>
-          <input id="po_no" type="text" bind:value={$formData.po_no} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" />
+          <input id="po_no" type="text" bind:value={$formData.po_no} class="mt-2 block w-full rounded-lg border-orange-300 shadow-sm focus:ring-2 focus:ring-orange-500" />
         </div>
         <div>
           <label for="po_date" class="block text-sm font-medium text-gray-800">P.O. Date</label>
@@ -236,7 +246,7 @@
         </div>
       </div>
 
-      <!-- Received Date, Category, Warranty -->
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="received_date" class="block text-sm font-medium text-gray-800">Received Date</label>
@@ -248,13 +258,12 @@
         </div>
       </div>
 
-      <!-- Warranty and Warranty Due Days -->
+ 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <label for="warranty" class="block text-sm font-medium text-gray-800">Warranty</label>
           <input id="warranty" type="number" bind:value={$formData.warranty} class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-orange-500" />
         </div>
-        <!-- Hide the Warranty Due Days field if Warranty is filled -->
         {#if $formData.warranty === 0}
           <div>
             <label for="warranty_due_days" class="block text-sm font-medium text-gray-800">Warranty Due (days)</label>
