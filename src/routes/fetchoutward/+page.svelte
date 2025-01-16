@@ -5,31 +5,36 @@
     let isLoading = true;
     let expandedRow = null;
 
-    const apiUrl = "http://localhost:8000/getlist";
+    const apiUrl = "http://localhost:8000/fetchoutward";
 
-    // Function to convert timestamp to IST format
     function convertToIST(timestamp) {
-        if (!timestamp) return "Invalid Date";
-
-        const date = new Date(timestamp);
-
-        if (isNaN(date.getTime())) return "Invalid Date";
-
-        const options = {
-            timeZone: "Asia/Kolkata",
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-        };
-
-        return new Intl.DateTimeFormat("en-IN", options)
-            .format(date)
-            .replace(/(AM|PM)/g, (match) => ` ${match}`); // Add a space before AM/PM
+    if (!timestamp) {
+        console.error("Invalid timestamp:", timestamp);
+        return "Invalid Date";
     }
+
+    // Try parsing ISO 8601 format first (e.g., "2024-01-16T12:34:56Z")
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+        console.error("Invalid Date:", timestamp);
+        return "Invalid Date";
+    }
+
+    const options = {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+    };
+
+    return new Intl.DateTimeFormat("en-IN", options)
+        .format(date)
+        .replace(/(AM|PM)/g, (match) => ` ${match}`); // Add space before AM/PM
+}
 
     onMount(async () => {
         try {
@@ -47,20 +52,21 @@
         }
     });
 </script>
+
 <div class="min-h-screen flex flex-col bg-white">
     <!-- Header -->
     <header class="bg-black text-white shadow-md">
         <div class="container mx-auto px-6 py-4 flex items-center">
             <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
             <div>
-                <h1 class="text-3xl font-extralight text-white">SR Automation</h1>               
+                <h1 class="text-3xl font-extralight text-white">SR Automation</h1>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="flex-grow p-6">
-        <h1 class="text-3xl font-bold text-center text-black mb-6">Material Inward Table</h1>
+        <h1 class="text-3xl font-bold text-center text-black mb-6">Material Outward Table</h1>
 
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
@@ -72,8 +78,8 @@
                     <thead class="bg-black text-white">
                         <tr>
                             <th class="py-3 px-4">Timestamp</th>
-                            <th class="py-3 px-4">Supplier</th>
-                            <th class="py-3 px-4">Buyer</th>
+                            <th class="py-3 px-4">Seller</th>
+                            <th class="py-3 px-4">Customer</th>
                             <th class="py-3 px-4">Part Code</th>
                             <th class="py-3 px-4">Serial Number</th>
                             <th class="py-3 px-4">Quantity</th>
@@ -81,7 +87,7 @@
                             <th class="py-3 px-4">PO Date</th>
                             <th class="py-3 px-4">Invoice Number</th>
                             <th class="py-3 px-4">Invoice Date</th>
-                            <th class="py-3 px-4">Received Date</th>
+                            <th class="py-3 px-4">Delivery Date</th>
                             <th class="py-3 px-4">Unit Price</th>
                             <th class="py-3 px-4">Category</th>
                             <th class="py-3 px-4">Warranty</th>
@@ -97,17 +103,18 @@
                         {:else}
                             {#each data as row, index}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
-                                    <td class="py-3 px-4 whitespace-nowrap">{row.timestamp}</td>
-                                    <td class="py-3 px-4 text-center">{row.supplier}</td>
-                                    <td class="py-3 px-4 text-center">{row.buyer}</td>
+                                    <td class="py-3 px-4 whitespace-nowrap">
+                                      {row.timestamp}</td>
+                                    <td class="py-3 px-4 text-center">{row.seller}</td>
+                                    <td class="py-3 px-4 text-center">{row.customer}</td>
                                     <td class="py-3 px-4 text-center">{row.partcode}</td>
                                     <td class="py-3 px-4 text-center">{row.serial_number}</td>
                                     <td class="py-3 px-4 text-center">{row.qty}</td>
-                                    <td class="py-3 px-4 text-center">{row.po_no}</td>
-                                    <td class="py-3 px-4 text-center">{new Date(row.po_date).toLocaleDateString()}</td>
-                                    <td class="py-3 px-4 text-center">{row.invoice_no}</td>
-                                    <td class="py-3 px-4 text-center">{new Date(row.invoice_date).toLocaleDateString()}</td>
-                                    <td class="py-3 px-4 text-center">{new Date(row.received_date).toLocaleDateString()}</td>
+                                    <td class="py-3 px-4 text-center">{row.cus_po_no}</td>
+                                    <td class="py-3 px-4 text-center">{new Date(row.cus_po_date).toLocaleDateString()}</td>
+                                    <td class="py-3 px-4 text-center">{row.cus_invoice_no}</td>
+                                    <td class="py-3 px-4 text-center">{new Date(row.cus_invoice_date).toLocaleDateString()}</td>
+                                    <td class="py-3 px-4 text-center">{new Date(row.delivery_date).toLocaleDateString()}</td>
                                     <td class="py-3 px-4 text-center">₹{row.unit_price_per_qty.toFixed(2)}</td>
                                     <td class="py-3 px-4 text-center">{row.category}</td>
                                     <td class="py-3 px-4 text-center">{row.warranty} Days</td>
@@ -125,8 +132,8 @@
                                 {#if expandedRow === index}
                                     <tr class="bg-gray-200">
                                         <td colspan="16" class="py-4 px-6 text-sm text-gray-700">
-                                            <p><strong>Supplier:</strong> {row.supplier}</p>
-                                            <p><strong>Buyer:</strong> {row.buyer}</p>
+                                            <p><strong>Seller:</strong> {row.seller}</p>
+                                            <p><strong>Customer:</strong> {row.customer}</p>
                                             <p><strong>Part Code:</strong> {row.partcode}</p>
                                             <p><strong>Serial Number:</strong> {row.serial_number}</p>
                                             <p><strong>Quantity:</strong> {row.qty}</p>

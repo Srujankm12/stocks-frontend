@@ -140,20 +140,24 @@
   <!-- Main Content -->
   <main class="flex-grow container mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10">
     <!-- Left Section: Info and Image -->
-    <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-center items-start">
-      <img src="image.webp" alt="Material Tracking" class="w-full h-full mb-4 rounded-lg shadow-lg object-cover hover:scale-105 transition-transform duration-500" />
-      <h2 class="text-3xl font-semibold text-gray-900 mb-6">Why Choose Us?</h2>
+    <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
+      <!-- Image Block -->
+      <div class="w-full overflow-hidden rounded-lg">
+        <img src="image.webp" alt="Material Tracking" class="w-full h-auto mb-4 object-cover transition-transform duration-500 hover:scale-105" />
+      </div>
+      <!-- Text Info -->
+      <h2 class="text-3xl font-semibold text-gray-900">Why Choose Us?</h2>
       <ul class="space-y-4 text-gray-700 text-lg">
         <li class="flex items-start">
-          <span class="text-black  font-bold mr-3">•</span>
+          <span class="text-black font-bold mr-3">•</span>
           Automate data collection for inventory accuracy.
         </li>
         <li class="flex items-start">
-          <span class="text-black  font-bold mr-3">•</span>
+          <span class="text-black font-bold mr-3">•</span>
           Centralize supplier and buyer details for quick access.
         </li>
         <li class="flex items-start">
-          <span class="text-black  font-bold mr-3">•</span>
+          <span class="text-black font-bold mr-3">•</span>
           Ensure compliance with precise record keeping.
         </li>
         <li class="flex items-start">
@@ -163,8 +167,10 @@
       </ul>
     </div>
 
+  
+
     <form on:submit={handleSubmit} class="bg-white shadow-xl rounded-lg p-8 space-y-8 transition-shadow duration-300">
-      <h2 class="text-3xl font-semibold text-gray-900 mb-8">Enter Material Details</h2>
+      <h2 class="text-3xl font-semibold text-gray-900 mb-8">Enter Material Inward Details</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>

@@ -34,7 +34,9 @@
                     <div class="border-b-[5px] border-l-[5px] border-black rounded-2xl p-6 bg-white flex flex-col h-72 duration-75 hover:border-l-0 hover:border-b-0 shadow-lg">
                         <span class="text-start mt-2 text-2xl font-semibold">Material Outward</span>
                         <div class="flex-grow"></div>
-                        <button class="text-xl p-3 rounded-lg bg-black text-white font-bold self-end">
+                        <button class="text-xl p-3 rounded-lg bg-black text-white font-bold self-end"
+                            onclick={() => goto("/outwardpage")}
+                        >
                             Manage
                         </button>
                     </div>

@@ -1,0 +1,414 @@
+<script>
+  import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+
+  // Dropdown data
+  let dropdownData = writable({
+    sellers: [],
+    branchRegions: [],
+    issuesAgainst: [],
+  });
+
+  // Form data
+  let formData = writable({
+    timestamp: '',
+    customer: '',
+    seller: '',
+    branch_region: '',
+    partcode: '',
+    serial_number: '',
+    qty: 0,
+    cus_po_no: '',
+    cus_po_date: '',
+    cus_invoice_no: '',
+    cus_invoice_date: '',
+    delivery_date: '',
+    unit_price_per_qty: 0.0,
+    issue_against: '',
+    notes: '',
+    category: '',
+    warranty: 0,
+    warranty_due_days: 0,
+  });
+
+  // Loading and error states
+  let isLoading = false;
+  let errorMessage = '';
+
+  // Fetch dropdown data
+  const fetchDropdownData = async () => {
+    isLoading = true;
+    try {
+      const response = await fetch('http://localhost:8000/outwardDropdown', { method: 'GET' });
+      if (response.ok) {
+        const data = await response.json();
+        dropdownData.set({
+          sellers: [...new Set(data.map((item) => item.seller))],
+          branchRegions: [...new Set(data.map((item) => item.branch_region))],
+          issuesAgainst: [...new Set(data.map((item) => item.issue_against))],
+        });
+      } else {
+        errorMessage = `Failed to fetch dropdown data: ${response.statusText}`;
+      }
+    } catch (error) {
+      errorMessage = `Error fetching dropdown data: ${error.message}`;
+    } finally {
+      isLoading = false;
+    }
+  };
+
+  // Set current timestamp
+  const setTimestamp = () => {
+    const currentTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    formData.update((data) => ({ ...data, timestamp: currentTime }));
+  };
+
+  // Form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setTimestamp();
+    const payload = $formData;
+
+    isLoading = true;
+    try {
+      const response = await fetch('http://localhost:8000/submitoutward', {
+        method: 'POST',
+
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        console.log('Form submitted successfully:', await response.json());
+        formData.set({
+          timestamp: '',
+          customer: '',
+          seller: '',
+          branch_region: '',
+          partcode: '',
+          serial_number: '',
+          qty: 0,
+          cus_po_no: '',
+          cus_po_date: '',
+          cus_invoice_no: '',
+          cus_invoice_date: '',
+          delivery_date: '',
+          unit_price_per_qty: 0.0,
+          issue_against: '',
+          notes: '',
+          category: '',
+          warranty: 0,
+          warranty_due_days: 0,
+        });
+        errorMessage = '';
+      } else {
+        errorMessage = `Form submission failed: ${await response.text()}`;
+      }
+    } catch (error) {
+      errorMessage = `Error during form submission: ${error.message}`;
+    } finally {
+      isLoading = false;
+    }
+  };
+
+  // Fetch dropdown data on mount
+  onMount(() => {
+    fetchDropdownData();
+  });
+</script>
+<div class="min-h-screen flex flex-col bg-white">
+  <!-- Header -->
+  <header class="bg-black text-white shadow-md">
+    <div class="container mx-auto px-6 py-4 flex items-center">
+        <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
+        <div>
+            <h1 class="text-3xl font-extralight text-white">SR Automation</h1>
+
+        </div>
+    </div>
+</header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10">
+    <!-- Left Section: Info and Image -->
+    <!-- Left Section: Info and Image -->
+<div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
+  <!-- Image Block -->
+  <div class="w-full overflow-hidden rounded-lg">
+    <img src="image.webp" alt="Material Tracking" class="w-full h-auto mb-4 object-cover transition-transform duration-500 hover:scale-105" />
+  </div>
+  <!-- Text Info -->
+  <h2 class="text-3xl font-semibold text-gray-900">Why Choose Us?</h2>
+  <ul class="space-y-4 text-gray-700 text-lg">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-3">•</span>
+      Automate data collection for inventory accuracy.
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-3">•</span>
+      Centralize supplier and buyer details for quick access.
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-3">•</span>
+      Ensure compliance with precise record keeping.
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-3">•</span>
+      Optimize cost tracking with unit price details.
+    </li>
+  </ul>
+</div>
+
+    <!-- Right Section: Form -->
+    <form on:submit={handleSubmit} class="bg-white shadow-xl rounded-lg p-8 space-y-8">
+      <h2 class="text-3xl font-semibold text-gray-900 mb-8">Enter Material Outward Details</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="customer" class="block text-sm font-medium text-gray-700">Customer</label>
+          <input id="customer" type="text" bind:value={$formData.customer} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="seller" class="block text-sm font-medium text-gray-700">Seller</label>
+          <select id="seller" bind:value={$formData.seller} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required>
+            <option value="" disabled>Select a seller</option>
+            {#each $dropdownData.sellers as seller}
+              <option value={seller}>{seller}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="branch_region" class="block text-sm font-medium text-gray-700">Branch Region</label>
+          <select id="branch_region" bind:value={$formData.branch_region} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required>
+            <option value="" disabled>Select a branch region</option>
+            {#each $dropdownData.branchRegions as region}
+              <option value={region}>{region}</option>
+            {/each}
+          </select>
+        </div>
+        <div>
+          <label for="partcode" class="block text-sm font-medium text-gray-700">Partcode</label>
+          <input id="partcode" type="text" bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="serial_number" class="block text-sm font-medium text-gray-700">Serial Number</label>
+          <input id="serial_number" type="text" bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
+          <input id="qty" type="number" bind:value={$formData.qty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="cus_po_no" class="block text-sm font-medium text-gray-700">Customer PO Number</label>
+          <input id="cus_po_no" type="text" bind:value={$formData.cus_po_no} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="cus_po_date" class="block text-sm font-medium text-gray-700">Customer PO Date</label>
+          <input id="cus_po_date" type="date" bind:value={$formData.cus_po_date} 
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="cus_invoice_no" class="block text-sm font-medium text-gray-700">Customer Invoice Number</label>
+          <input id="cus_invoice_no" type="text" bind:value={$formData.cus_invoice_no} 
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="cus_invoice_date" class="block text-sm font-medium text-gray-700">Customer Invoice Date</label>
+          <input id="cus_invoice_date" type="date" bind:value={$formData.cus_invoice_date} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+        </div>
+        <div>
+          <label for="delivery_date" class="block text-sm font-medium text-gray-700">Delivery Date</label>
+          <input id="delivery_date" type="date" bind:value={$formData.delivery_date}
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+        </div>
+        <div>
+          <label for="unit_price_per_qty" class="block text-sm font-medium text-gray-700">Unit Price Per Quantity</label>
+          <input id="unit_price_per_qty" type="number" step="0.01" bind:value={$formData.unit_price_per_qty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+        </div>
+  
+        <div>
+          <label for="issue_against" class="block text-sm font-medium text-gray-700">Issue Against</label>
+          <select id="issue_against" bind:value={$formData.issue_against} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+            <option value="" disabled>Select an issue type</option>
+            {#each $dropdownData.issuesAgainst as issue}
+              <option value={issue}>{issue}</option>
+            {/each}
+          </select>
+        </div>
+        <div>
+          <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes" bind:value={$formData.notes} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" rows="3"></textarea>
+        </div>
+  
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+          <input id="category" type="text" bind:value={$formData.category} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+        </div>
+  
+        <div>
+          <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty</label>
+          <input id="warranty" type="number" bind:value={$formData.warranty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+        </div>
+  
+        {#if $formData.warranty === 0}
+          <div>
+            <label for="warranty_due_days" class="block text-sm font-medium text-gray-700">Warranty Due Days</label>
+            <input id="warranty_due_days" type="number" bind:value={$formData.warranty_due_days} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+          </div>
+        {/if}
+  
+      
+      </div>
+   
+     
+
+      <div class="text-center">
+        <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg shadow-lg ">
+          Submit
+        </button>
+      </div>
+      </form>
+  </main>
+</div>
+
+<!-- 
+<div class="min-h-screen flex flex-col bg-white">
+  <header class="bg-black text-white shadow-md">
+    <div class="container mx-auto px-6 py-4 flex items-center">
+      <img src="/logo.jpeg" alt="Logo" class="w-12 h-12 rounded-full mr-4" />
+      <h1 class="text-3xl font-extralight">SR Automation</h1>
+    </div>
+  </header>
+
+  <main class="flex-grow container mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10">
+    <div class="bg-white shadow-lg rounded-lg p-8">
+      <h2 class="text-3xl font-semibold text-gray-900 mb-6">Why Choose Us?</h2>
+      <ul class="space-y-4 text-gray-700 text-lg">
+        <li>Automate data collection for inventory accuracy.</li>
+        <li>Centralize supplier and buyer details for quick access.</li>
+        <li>Ensure compliance with precise record keeping.</li>
+        <li>Optimize cost tracking with unit price details.</li>
+      </ul>
+    </div>
+
+    <form on:submit={handleSubmit} class="bg-white shadow-xl rounded-lg p-8 space-y-6">
+      <h2 class="text-3xl font-semibold text-gray-900">Enter Material Details</h2>
+
+      {#if errorMessage}
+        <p class="text-red-500">{errorMessage}</p>
+      {/if}
+
+      <div>
+        <label for="customer" class="block text-sm font-medium text-gray-700">Customer</label>
+        <input id="customer" type="text" bind:value={$formData.customer} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="seller" class="block text-sm font-medium text-gray-700">Seller</label>
+        <select id="seller" bind:value={$formData.seller} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+          <option value="" disabled>Select a seller</option>
+          {#each $dropdownData.sellers as seller}
+            <option value={seller}>{seller}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div>
+        <label for="branch_region" class="block text-sm font-medium text-gray-700">Branch Region</label>
+        <select id="branch_region" bind:value={$formData.branch_region} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+          <option value="" disabled>Select a branch region</option>
+          {#each $dropdownData.branchRegions as region}
+            <option value={region}>{region}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div>
+        <label for="partcode" class="block text-sm font-medium text-gray-700">Partcode</label>
+        <input id="partcode" type="text" bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="serial_number" class="block text-sm font-medium text-gray-700">Serial Number</label>
+        <input id="serial_number" type="text" bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
+        <input id="qty" type="number" bind:value={$formData.qty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="cus_po_no" class="block text-sm font-medium text-gray-700">Customer PO Number</label>
+        <input id="cus_po_no" type="text" bind:value={$formData.cus_po_no} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="cus_po_date" class="block text-sm font-medium text-gray-700">Customer PO Date</label>
+        <input id="cus_po_date" type="date" bind:value={$formData.cus_po_date} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="cus_invoice_no" class="block text-sm font-medium text-gray-700">Customer Invoice Number</label>
+        <input id="cus_invoice_no" type="text" bind:value={$formData.cus_invoice_no} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="cus_invoice_date" class="block text-sm font-medium text-gray-700">Customer Invoice Date</label>
+        <input id="cus_invoice_date" type="date" bind:value={$formData.cus_invoice_date} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="delivery_date" class="block text-sm font-medium text-gray-700">Delivery Date</label>
+        <input id="delivery_date" type="date" bind:value={$formData.delivery_date} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="unit_price_per_qty" class="block text-sm font-medium text-gray-700">Unit Price Per Quantity</label>
+        <input id="unit_price_per_qty" type="number" step="0.01" bind:value={$formData.unit_price_per_qty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="issue_against" class="block text-sm font-medium text-gray-700">Issue Against</label>
+        <select id="issue_against" bind:value={$formData.issue_against} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+          <option value="" disabled>Select an issue type</option>
+          {#each $dropdownData.issuesAgainst as issue}
+            <option value={issue}>{issue}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div>
+        <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+        <textarea id="notes" bind:value={$formData.notes} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+        <input id="category" type="text" bind:value={$formData.category} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+      </div>
+
+      <div>
+        <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty</label>
+        <input id="warranty" type="number" bind:value={$formData.warranty} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+      </div>
+
+      {#if $formData.warranty === 0}
+        <div>
+          <label for="warranty_due_days" class="block text-sm font-medium text-gray-700">Warranty Due Days</label>
+          <input id="warranty_due_days" type="number" bind:value={$formData.warranty_due_days} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
+        </div>
+      {/if}
+
+      <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg">Submit</button>
+    </form>
+  </main>
+</div> -->
