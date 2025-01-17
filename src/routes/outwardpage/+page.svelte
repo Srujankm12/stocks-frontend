@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+  import Header from '$lib/header.svelte';
 
   let dropdownData = writable({
     sellers: [],
@@ -109,18 +110,11 @@
   });
 </script>
 <div class="min-h-screen flex flex-col bg-white">
-  <header class="bg-black text-white shadow-md">
-    <div class="container mx-auto px-6 py-4 flex items-center">
-        <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
-        <div>
-            <h1 class="text-3xl font-extralight text-white">SR Automation</h1>
+  <Header />
+  
 
-        </div>
-    </div>
-</header>
-
-  <main class="flex-grow container mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10">
-<div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
+  <main class="flex-grow container mx-auto px-6 py-20 grid lg:grid-cols-2 gap-10">
+    <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
   <div class="w-full overflow-hidden rounded-lg">
     <img src="image.webp" alt="Material Tracking" class="w-full h-auto mb-4 object-cover transition-transform duration-500 hover:scale-105" />
   </div>

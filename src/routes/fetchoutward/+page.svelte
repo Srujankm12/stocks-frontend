@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-
+    import Header from "$lib/header.svelte";
     let data = [];
     let isLoading = true;
     let expandedRow = null;
@@ -13,7 +13,7 @@
         return "Invalid Date";
     }
 
-    // Try parsing ISO 8601 format first (e.g., "2024-01-16T12:34:56Z")
+
     const date = new Date(timestamp);
     if (isNaN(date.getTime())) {
         console.error("Invalid Date:", timestamp);
@@ -33,7 +33,7 @@
 
     return new Intl.DateTimeFormat("en-IN", options)
         .format(date)
-        .replace(/(AM|PM)/g, (match) => ` ${match}`); // Add space before AM/PM
+        .replace(/(AM|PM)/g, (match) => ` ${match}`); 
 }
 
     onMount(async () => {
@@ -54,19 +54,13 @@
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
-    <!-- Header -->
-    <header class="bg-black text-white shadow-md">
-        <div class="container mx-auto px-6 py-4 flex items-center">
-            <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
-            <div>
-                <h1 class="text-3xl font-extralight text-white">SR Automation</h1>
-            </div>
-        </div>
-    </header>
+    <Header />
+  
+  
 
-    <!-- Main Content -->
-    <main class="flex-grow p-6">
-        <h1 class="text-3xl font-bold text-center text-black mb-6">Material Outward Table</h1>
+
+    <main class="flex-grow py-28 px-2">
+    
 
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
@@ -152,7 +146,6 @@
         {/if}
     </main>
 
-    <!-- Footer -->
     <footer class="bg-black text-white py-3 text-center text-sm">
         &copy; 2024 SRA BAO. All Rights Reserved.
     </footer>

@@ -1,16 +1,14 @@
 <script>
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+  import Header from '$lib/header.svelte';
 
-  // Example of creating a writable store
   let count = writable(0);
 
-  // Function to increment the count
   function increment() {
     count.update(n => n + 1);
   }
 
-  // Store to hold form data
   let formData = writable({
     id: null,
     timestamp: '',
@@ -30,7 +28,6 @@
     warranty_due_days: 0,
   });
 
-  // Function to fetch suppliers and buyers (optional, depending on your form)
   let suppliers = writable([]);
   let buyers = writable([]);
 
@@ -57,23 +54,20 @@
     }
   };
 
-  // Function to set timestamp when the form is submitted
   const setTimestamp = () => {
-    // Get current date in Bengaluru time zone (Asia/Kolkata)
     const bengaluruTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
     formData.update((data) => ({
       ...data,
-      timestamp: bengaluruTime, // Set the timestamp in Bengaluru time
+      timestamp: bengaluruTime, 
     }));
   };
 
-  // Submit handler to set timestamp before submitting and clear form on success
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-    setTimestamp(); // Set the timestamp before submission
+    event.preventDefault();
+    setTimestamp();
 
-    // Get the current form data from the store
+  
     const formPayload = $formData;
 
     try {
@@ -87,7 +81,6 @@
         const responseData = await response.json();
         console.log('Data submitted successfully:', responseData);
 
-        // Clear the form data after successful submission
         formData.set({
           id: null,
           timestamp: '',
@@ -107,7 +100,6 @@
           warranty_due_days: 0,
         });
 
-        // Optionally, reset other relevant stores (e.g., suppliers, buyers) if needed
         suppliers.set([]);
         buyers.set([]);
       } else {
@@ -126,26 +118,14 @@
 
 
 <div class="min-h-screen flex flex-col bg-white">
-  <!-- Header -->
-  <header class="bg-black text-white shadow-md">
-    <div class="container mx-auto px-6 py-4 flex items-center">
-        <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
-        <div>
-            <h1 class="text-3xl font-extralight text-white">SR Automation</h1>
+  <Header />
+  
 
-        </div>
-    </div>
-</header>
-
-  <!-- Main Content -->
-  <main class="flex-grow container mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10">
-    <!-- Left Section: Info and Image -->
+  <main class="flex-grow container mx-auto px-6 py-20 grid lg:grid-cols-2 gap-10">
     <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
-      <!-- Image Block -->
       <div class="w-full overflow-hidden rounded-lg">
         <img src="image.webp" alt="Material Tracking" class="w-full h-auto mb-4 object-cover transition-transform duration-500 hover:scale-105" />
       </div>
-      <!-- Text Info -->
       <h2 class="text-3xl font-semibold text-gray-900">Why Choose Us?</h2>
       <ul class="space-y-4 text-gray-700 text-lg">
         <li class="flex items-start">
@@ -206,7 +186,6 @@
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Quantity Input -->
         <div>
           <label for="qty" class="block text-sm font-medium text-gray-800">Quantity</label>
           <input 
@@ -218,7 +197,6 @@
           />
         </div>
       
-        <!-- Unit Price Input -->
         <div>
           <label for="unit_price_per_qty" class="block text-sm font-medium text-gray-800">Unit Price (per Qty)</label>
           <input 
@@ -234,7 +212,6 @@
       
   
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <!-- P.O. Number Input -->
         <div>
           <label for="po_no" class="block text-sm font-medium text-gray-800">P.O. Number</label>
           <input 
@@ -245,7 +222,6 @@
           />
         </div>
       
-        <!-- P.O. Date Input -->
         <div>
           <label for="po_date" class="block text-sm font-medium text-gray-800">P.O. Date</label>
           <input 
@@ -256,7 +232,6 @@
           />
         </div>
       
-        <!-- Invoice Number Input -->
         <div>
           <label for="invoice_no" class="block text-sm font-medium text-gray-800">Invoice Number</label>
           <input 
@@ -267,7 +242,6 @@
           />
         </div>
       
-        <!-- Invoice Date Input -->
         <div>
           <label for="invoice_date" class="block text-sm font-medium text-gray-800">Invoice Date</label>
           <input 
@@ -282,7 +256,6 @@
 
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <!-- Received Date Input -->
         <div>
           <label for="received_date" class="block text-sm font-medium text-gray-800">Received Date</label>
           <input 
@@ -293,7 +266,6 @@
           />
         </div>
       
-        <!-- Category Input -->
         <div>
           <label for="category" class="block text-sm font-medium text-gray-800">Category</label>
           <input 
@@ -306,7 +278,6 @@
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <!-- Warranty Input -->
         <div>
           <label for="warranty" class="block text-sm font-medium text-gray-800">Warranty</label>
           <input 
@@ -317,7 +288,6 @@
           />
         </div>
       
-        <!-- Warranty Due Days Input (Conditional) -->
         {#if $formData.warranty === 0}
           <div>
             <label for="warranty_due_days" class="block text-sm font-medium text-gray-800">Warranty Due (days)</label>
@@ -332,7 +302,6 @@
       </div>
       
 
-      <!-- Submit Button -->
       <div class="text-center">
         <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg shadow-lg ">
           Submit

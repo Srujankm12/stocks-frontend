@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import Header from "$lib/header.svelte";
 
     let data = [];
     let isLoading = true;
@@ -46,20 +47,13 @@
         }
     });
 </script>
-<div class="min-h-screen flex flex-col bg-white">
-
-    <header class="bg-black text-white shadow-md">
-        <div class="container mx-auto px-6 py-4 flex items-center">
-            <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
-            <div>
-                <h1 class="text-3xl font-extralight text-white">SR Automation</h1>               
-            </div>
-        </div>
-    </header>
+<div class="min-h-screen flex flex-col bg-white ">
+    <Header />
 
 
-    <main class="flex-grow p-6">
-        <h1 class="text-3xl font-bold text-center text-black mb-6">Material Inward Table</h1>
+
+    <main class="flex-grow py-28 px-2">
+    
 
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
