@@ -7,7 +7,6 @@
 
     const apiUrl = "http://localhost:8000/getlist";
 
-    // Function to convert timestamp to IST format
     function convertToIST(timestamp) {
         if (!timestamp) return "Invalid Date";
 
@@ -28,7 +27,7 @@
 
         return new Intl.DateTimeFormat("en-IN", options)
             .format(date)
-            .replace(/(AM|PM)/g, (match) => ` ${match}`); // Add a space before AM/PM
+            .replace(/(AM|PM)/g, (match) => ` ${match}`); 
     }
 
     onMount(async () => {
@@ -48,7 +47,7 @@
     });
 </script>
 <div class="min-h-screen flex flex-col bg-white">
-    <!-- Header -->
+
     <header class="bg-black text-white shadow-md">
         <div class="container mx-auto px-6 py-4 flex items-center">
             <img src="/logo.jpeg" alt="SRA BAO Logo" class="w-12 h-12 rounded-full mr-4" />
@@ -58,7 +57,7 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+
     <main class="flex-grow p-6">
         <h1 class="text-3xl font-bold text-center text-black mb-6">Material Inward Table</h1>
 
@@ -145,7 +144,7 @@
         {/if}
     </main>
 
-    <!-- Footer -->
+
     <footer class="bg-black text-white py-3 text-center text-sm">
         &copy; 2024 SRA BAO. All Rights Reserved.
     </footer>
