@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import Header from '$lib/header.svelte';
+	import { Ear } from 'lucide-svelte';
 
   let count = writable(0);
 
@@ -30,6 +31,7 @@
 
   let suppliers = writable([]);
   let buyers = writable([]);
+  let categories = writable([]);
 
   const fetchSuppliersAndBuyers = async () => {
     try {
@@ -39,12 +41,15 @@
         const data = await response.json();
         const uniqueSuppliers = [...new Set(data.map(item => item.supplier))];
         const uniqueBuyers = [...new Set(data.map(item => item.buyer))];
+        const uniqueCategories = [...new Set(data.map(item => item.category))];
 
         suppliers.set(uniqueSuppliers);
         buyers.set(uniqueBuyers);
+        categories.set(uniqueCategories);
 
         console.log('Suppliers:', uniqueSuppliers);
         console.log('Buyers:', uniqueBuyers);
+        console.log('Categories:', uniqueCategories);
       } else {
         const errorData = await response.json();
         console.error('Error fetching data:', errorData.message);
@@ -171,8 +176,7 @@
             {/each}
           </select>
         </div>
-      </div>
-
+     </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -267,15 +271,24 @@
         </div>
       
         <div>
-          <label for="category" class="block text-sm font-medium text-gray-800">Category</label>
-          <input 
-            id="category" 
-            type="text" 
-            bind:value={$formData.category} 
-            class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none text-gray-800 px-4 py-2" 
-          />
+          <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+          <select
+            id="category"
+            bind:value={$formData.category}
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none"
+          >
+            <option value="" disabled>Select a category</option>
+            {#each $categories as category}
+              <option value={category}>{category}</option>
+            {/each}
+          </select>
         </div>
+        
       </div>
+
+
+      
+
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
         <div>
