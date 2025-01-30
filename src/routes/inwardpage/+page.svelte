@@ -181,11 +181,17 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="partcode" class="block text-sm font-medium text-gray-700">Partcode</label>
-          <input id="partcode" type="text" bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="partcode"
+           type="text"
+           placeholder="Enter Partcode"
+
+           bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
           <label for="serial_number" class="block text-sm font-medium text-gray-700">Serial Number</label>
-          <input id="serial_number" type="text" bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="serial_number" type="text"
+          placeholder="Enter Serial Number"
+           bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
       </div>
       
@@ -220,6 +226,7 @@
           <label for="po_no" class="block text-sm font-medium text-gray-800">P.O. Number</label>
           <input 
             id="po_no" 
+            placeholder="Enter P.O. Number"
             type="text" 
             bind:value={$formData.po_no} 
             class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none text-gray-800 px-4 py-2" 
@@ -231,6 +238,7 @@
           <input 
             id="po_date" 
             type="date" 
+            placeholder="Enter P.O. Date"
             bind:value={$formData.po_date} 
             class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none text-gray-800 px-4 py-2" 
           />
@@ -241,6 +249,7 @@
           <input 
             id="invoice_no" 
             type="text" 
+            placeholder="Enter Invoice Number"
             bind:value={$formData.invoice_no} 
             class="mt-2 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none text-gray-800 px-4 py-2" 
           />
@@ -316,9 +325,12 @@
       
 
       <div class="text-center">
-        <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg shadow-lg ">
-          Submit
-        </button>
+        <button
+        type="submit"
+        class="px-8 py-3 bg-black text-white text-xl font-semibold rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black transition duration-300"
+    >
+        Submit
+    </button>
       </div>
     </form>
   </main>

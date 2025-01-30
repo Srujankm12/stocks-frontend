@@ -7,6 +7,7 @@
     sellers: [],
     branchRegions: [],
     issuesAgainst: [],
+    categories: [],
   });
 
   let formData = writable({
@@ -43,6 +44,7 @@
           sellers: [...new Set(data.map((item) => item.seller))],
           branchRegions: [...new Set(data.map((item) => item.branch_region))],
           issuesAgainst: [...new Set(data.map((item) => item.issue_against))],
+          categories: [...new Set(data.map((item) => item.category))],
         });
       } else {
         errorMessage = `Failed to fetch dropdown data: ${response.statusText}`;
@@ -145,7 +147,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="customer" class="block text-sm font-medium text-gray-700">Customer</label>
-          <input id="customer" type="text" bind:value={$formData.customer} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="customer" 
+          placeholder="Enter Customer Name"
+          type="text" bind:value={$formData.customer} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
           <label for="seller" class="block text-sm font-medium text-gray-700">Seller</label>
@@ -170,14 +174,18 @@
         </div>
         <div>
           <label for="partcode" class="block text-sm font-medium text-gray-700">Partcode</label>
-          <input id="partcode" type="text" bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="partcode"
+          placeholder="Enter Partcode"
+           type="text" bind:value={$formData.partcode} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="serial_number" class="block text-sm font-medium text-gray-700">Serial Number</label>
-          <input id="serial_number" type="text" bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="serial_number" 
+          placeholder="Enter Serial Number"
+          type="text" bind:value={$formData.serial_number} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
           <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
@@ -188,16 +196,22 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="cus_po_no" class="block text-sm font-medium text-gray-700">Customer PO Number</label>
-          <input id="cus_po_no" type="text" bind:value={$formData.cus_po_no} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
+          <input id="cus_po_no" 
+          placeholder="Enter Customer PO Number"
+          type="text" bind:value={$formData.cus_po_no} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
           <label for="cus_po_date" class="block text-sm font-medium text-gray-700">Customer PO Date</label>
-          <input id="cus_po_date" type="date" bind:value={$formData.cus_po_date} 
+          <input id="cus_po_date"
+          placeholder="Enter Customer PO Date"
+           type="date" bind:value={$formData.cus_po_date} 
           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
           <label for="cus_invoice_no" class="block text-sm font-medium text-gray-700">Customer Invoice Number</label>
-          <input id="cus_invoice_no" type="text" bind:value={$formData.cus_invoice_no} 
+          <input id="cus_invoice_no" 
+          placeholder="Enter Customer Invoice Number"
+          type="text" bind:value={$formData.cus_invoice_no} 
           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" required />
         </div>
         <div>
@@ -225,13 +239,25 @@
         </div>
         <div>
           <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
-          <textarea id="notes" bind:value={$formData.notes} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" rows="3"></textarea>
+          <textarea id="notes" bind:value={$formData.notes} 
+          placeholder="Enter Notes"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" rows="3"></textarea>
         </div>
   
         <div>
           <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-          <input id="category" type="text" bind:value={$formData.category} class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg" />
-        </div>
+          <select
+              id="category"
+              bind:value={$formData.category}
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none"
+              required
+          >
+              <option value="" disabled>Select a category</option>
+              {#each $dropdownData.categories as category}
+                  <option value={category}>{category}</option>
+              {/each}
+          </select>
+      </div>
   
         <div>
           <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty</label>
@@ -251,9 +277,12 @@
      
 
       <div class="text-center">
-        <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg shadow-lg ">
-          Submit
-        </button>
+        <button
+        type="submit"
+        class="px-8 py-3 bg-black text-white text-xl font-semibold rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black transition duration-300"
+    >
+        Submit
+    </button>
       </div>
       </form>
   </main>
