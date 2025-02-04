@@ -24,10 +24,11 @@
     };
   
     let isUpdating = false;
+    let showDownloadMessage = false; // Message visibility flag
 
     const apiUrl = "http://localhost:8000/materialstockdata";
     const updateUrl = "http://localhost:8000/materialupdate";
-
+    const downlaodUrl = "http://localhost:8000/materialstockdownload";
 
     let suppliers = [];
     let categories = [];
@@ -50,6 +51,7 @@
         }
     };
     fetchDropdownData();
+
     function convertToIST(timestamp) {
         if (!timestamp) {
             console.error("Invalid timestamp:", timestamp);
@@ -79,7 +81,6 @@
     }
 
     function openUpdateModal(row) {
-        // Populate updateData with the selected row values
         updateData = {
             id: row.id,
             supplier: row.supplier,
@@ -95,7 +96,7 @@
             issue: row.issue,
             reserved_stock: row.reserved_stock
         };
-        selectedRow = row; // Set selected row
+        selectedRow = row; 
         showUpdateModal = true;
     }
 
@@ -103,39 +104,34 @@
         event.preventDefault();
         isUpdating = true;
         try {
-            // Send only the updated field (e.g., part_code)
             const updatedFields = {};
-            // Only include the fields that are changed
+        
             Object.keys(updateData).forEach(key => {
                 if (updateData[key] !== selectedRow[key]) {
                     updatedFields[key] = updateData[key];
                 }
             });
 
-            // If no fields were updated, do nothing
             if (Object.keys(updatedFields).length === 0) {
                 console.log("No fields updated.");
                 return;
             }
 
-            // Construct the payload with the unchanged data plus the updated field
             const updatedData = {
-                ...selectedRow, // Keep the existing data
-                ...updatedFields, // Override with updated fields
+                ...selectedRow, 
+                ...updatedFields, 
             };
 
-            // Send the full data with the updated field
             const response = await fetch(updateUrl, {
-                method: "POST", // Use POST method for updates
-                body: JSON.stringify(updatedData), // Send all fields with the updated data
-               
+                method: "POST", 
+                body: JSON.stringify(updatedData),
             });
 
             if (response.ok) {
                 console.log("Stock updated successfully");
                 showUpdateModal = false;
-                selectedRow = null; // Clear selected row
-                await fetchData(); // Optionally fetch the updated data here
+                selectedRow = null;
+                await fetchData(); 
             } else {
                 console.error("Failed to update stock:", response.statusText);
             }
@@ -164,6 +160,22 @@
     }
 
     onMount(fetchData);
+
+    // Function to trigger download of the Excel file
+    function downloadExcel() {
+        const link = document.createElement("a");
+   
+        link.download = "MaterialStock.xlsx"; // Optional: you can change the filename here
+        link.click();
+
+        // Show the success message after download is triggered
+        showDownloadMessage = true;
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
+    }
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
@@ -206,9 +218,9 @@
                                 <td colspan="18" class="py-4 text-center text-gray-600">No data available</td>
                             </tr>
                         {:else}
-                            {#each data as row}
+                            {#each data as row , index}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
-                                    <td class="py-3 px-4 whitespace-nowrap">{row.id}</td>
+                                    <td class="py-3 px-4 whitespace-nowrap">{index+1}</td>
                                     <td class="py-3 px-4 text-center">{row.supplier}</td>
                                     <td class="py-3 px-4 text-center">{row.category}</td>
                                     <td class="py-3 px-4 text-center">{row.lead_time}</td>
@@ -235,7 +247,7 @@
                                     <td class="py-3 px-4 text-center">
                                         <!-- svelte-ignore a11y_consider_explicit_label -->
                                         <button
-                                            class="text-xl font-medium rounded-full flex items-center justify-center"
+                                            class="text-xl font-medium rounded-full flex items-center justify-center text-center"
                                             on:click={() => openUpdateModal(row)}
                                         >
                                             <i class="fas fa-edit"></i>
@@ -246,9 +258,22 @@
                         {/if}
                     </tbody>
                 </table>
+           
+
             </div>
+            <div class="py-4 flex justify-center items-center fixed bottom-0 left-0 right-0 text-center">
+                <button class="text-white bg-black rounded-md px-9 py-2" on:click={downloadExcel}>
+                    Download
+                </button>
+            </div>
+            
         {/if}           
     </main>
+    {#if showDownloadMessage}
+    <div class="fixed bottom-12 right-4 bg-black text-white font-semibold p-4 rounded-md shadow-2xl duration-300" transition:fade>
+        Excel downloaded successfully!
+    </div>
+{/if}
 
     {#if showUpdateModal}
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" transition:fade>

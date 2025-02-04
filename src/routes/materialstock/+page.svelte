@@ -2,7 +2,7 @@
     import Header from '$lib/header.svelte';
     import { writable } from 'svelte/store';
 
-    // Define the form data store
+   
     let formData = writable({
         supplier: '',
         category: '',
@@ -18,12 +18,12 @@
         reserved_stock: '',
     });
 
-    // Dropdown data
+
     let suppliers = [];
     let categories = [];
     let units = [];
 
-    // Fetch dropdown data from the server
+
     const fetchDropdownData = async () => {
         try {
             const response = await fetch('http://localhost:8000/materialstockdropdown');
@@ -40,26 +40,26 @@
         }
     };
 
-    // Call fetch function on page load
+ 
     fetchDropdownData();
 
-    // Handle form submission
+ 
     const handleSubmit = async (event) => {
-        event.preventDefault();  // Prevent default form submission behavior
+        event.preventDefault();  
 
-        console.log('Form Submitted', $formData);  // Log the form data
+        console.log('Form Submitted', $formData);  
 
         try {
-            // Send the form data to the backend
+      
             const response = await fetch('http://localhost:8000/materialstock', {
                 method: 'POST',
                 
              
-                body: JSON.stringify($formData), // Use the current form data as the payload
+                body: JSON.stringify($formData),
             });
 
             if (response.ok) {
-                // Reset the form data on successful submission
+             
                 formData.set({
                     supplier: '',
                     category: '',
@@ -124,7 +124,7 @@
             <h2 class="text-3xl font-semibold text-gray-900 mb-8">Enter Material Stock</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Supplier -->
+        
                 <div>
                     <label for="supplier" class="block text-sm font-medium text-gray-700">Supplier</label>
                     <select
@@ -140,7 +140,7 @@
                     </select>
                 </div>
 
-                <!-- Category -->
+     
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
                     <select
@@ -156,7 +156,7 @@
                     </select>
                 </div>
 
-                <!-- Lead Time -->
+       
                 <div>
                     <label for="lead_time" class="block text-sm font-medium text-gray-700">Lead Time</label>
                     <input
@@ -169,7 +169,7 @@
                     />
                 </div>
 
-                <!-- Std/Non-Std -->
+   
                 <div>
                     <label for="std_non_std" class="block text-sm font-medium text-gray-700">Std/Non-Std</label>
                     <input
@@ -182,7 +182,7 @@
                     />
                 </div>
 
-                <!-- Part Code -->
+      
                 <div>
                     <label for="part_code" class="block text-sm font-medium text-gray-700">Part Code</label>
                     <input
@@ -195,7 +195,7 @@
                     />
                 </div>
 
-                <!-- Unit -->
+   
                 <div>
                     <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>
                     <select
@@ -212,7 +212,7 @@
                     </select>
                 </div>
 
-                <!-- Rate -->
+
                 <div>
                     <label for="rate" class="block text-sm font-medium text-gray-700">Rate</label>
                     <input
@@ -225,7 +225,6 @@
                     />
                 </div>
 
-                <!-- Minimum Retain -->
                 <div>
                     <label for="minimum_retain" class="block text-sm font-medium text-gray-700">Minimum Retain</label>
                     <input
@@ -238,7 +237,6 @@
                     />
                 </div>
 
-                <!-- Maximum Retain -->
                 <div>
                     <label for="maximum_retain" class="block text-sm font-medium text-gray-700">Maximum Retain</label>
                     <input
@@ -251,7 +249,7 @@
                     />
                 </div>
 
-                <!-- Received -->
+               
                 <div>
                     <label for="received" class="block text-sm font-medium text-gray-700">Received</label>
                     <input
@@ -264,7 +262,6 @@
                     />
                 </div>
 
-                <!-- Issue -->
                 <div>
                     <label for="issue" class="block text-sm font-medium text-gray-700">Issue</label>
                     <input
@@ -277,7 +274,7 @@
                     />
                 </div>
 
-                <!-- Reserved Stock -->
+       
                 <div>
                     <label for="reserved_stock" class="block text-sm font-medium text-gray-700">Reserved Stock</label>
                     <input
@@ -291,7 +288,7 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
+         
             <div class="flex justify-center mt-6">
                 <button
                     type="submit"
