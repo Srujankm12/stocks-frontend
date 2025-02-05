@@ -32,7 +32,7 @@
     <!-- Sidebar Drawer -->
     {#if isDrawerOpen}
         <div class="fixed inset-0 bg-black bg-opacity-50 z-40" on:click={toggleDrawer}></div>
-        <div class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out">
+        <div class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg rounded-lg z-50 transform transition-transform duration-300 ease-in-out">
             <div class="p-6 flex flex-col h-full">
                 <h2 class="text-xl font-bold mb-4">Menu</h2>
                 <ul class="space-y-4">

@@ -9,21 +9,20 @@
 
 
     const apiUrl = "http://localhost:8000/fetchoutward";
-    const downloadexcelmo = "http://localhost:8000/outwarddownload";
+    const downloadexcelmo = "http://localhost:8000/downloadoutward";
 
 
     const downloadexcelmaterialoutward = async () => {
         try {
             const response = await fetch(downloadexcelmo, {
-                method: "GET",
-               
+                method: "GET",                     
             });
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "inwarddata.xlsx";
+                a.download = "outwarddata.xlsx";
                 a.click();
                 window.URL.revokeObjectURL(url);
             } else {
@@ -37,8 +36,6 @@
             showDownloadMessage = false;
         }, 3000);
     };
-
-
 
     function convertToIST(timestamp) {
     if (!timestamp) {
@@ -88,13 +85,8 @@
 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
-  
-  
-
 
     <main class="flex-grow py-28 px-2">
-    
-
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
                 <div class="animate-spin h-12 w-12 rounded-full border-t-4 border-gray-800 border-gray-300"></div>
