@@ -1,12 +1,42 @@
 <script>
     import { onMount } from "svelte";
     import Header from "$lib/header.svelte";
+    import { fade } from "svelte/transition";
 
     let data = [];
     let isLoading = true;
     let expandedRow = null;
+    let showDownloadMessage = false; 
 
     const apiUrl = "http://localhost:8000/getlist";
+    const downlaodUrl = "http://localhost:8000/downloadinward"
+     const downloadexcel = async () => {
+        try {
+            const response = await fetch(downlaodUrl, {
+                method: "GET",
+               
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "inwarddata.xlsx";
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error("Failed to download Excel file:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error downloading Excel file:", error);
+        }
+
+        showDownloadMessage = true;
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
+    };
+
 
     function convertToIST(timestamp) {
         if (!timestamp) return "Invalid Date";
@@ -135,11 +165,22 @@
                     </tbody>
                 </table>
             </div>
+            <div class="py-4 flex justify-center items-center fixed bottom-0 left-0 right-0 text-center">
+                <button class="text-white bg-black rounded-md px-9 py-2"
+                on:click={downloadexcel}
+                 >
+                
+               
+                    Download
+                </button>
+            </div>
+            
         {/if}
     </main>
+    {#if showDownloadMessage}
+    <div class="fixed bottom-12 right-4 bg-black text-white font-semibold p-4 rounded-md shadow-2xl duration-300" transition:fade>
+        Excel downloaded successfully!
+    </div>
+{/if}
 
-
-    <footer class="bg-black text-white py-3 text-center text-sm">
-        &copy; 2024 SRA BAO. All Rights Reserved.
-    </footer>
 </div>

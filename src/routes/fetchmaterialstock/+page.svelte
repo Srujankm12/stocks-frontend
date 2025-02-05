@@ -24,15 +24,42 @@
     };
   
     let isUpdating = false;
-    let showDownloadMessage = false; // Message visibility flag
+    let showDownloadMessage = false; 
 
     const apiUrl = "http://localhost:8000/materialstockdata";
     const updateUrl = "http://localhost:8000/materialupdate";
-    const downlaodUrl = "http://localhost:8000/materialstockdownload";
+    const downlaodUrlms = "http://localhost:8000/materialstockdownload";
 
     let suppliers = [];
     let categories = [];
     let units = [];
+
+    const downloadexcelms = async () => {
+        try {
+            const response = await fetch(downlaodUrlms, {
+                method: "GET",
+               
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "materialstock.xlsx";
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error("Failed to download Excel file:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error downloading Excel file:", error);
+        }
+
+        showDownloadMessage = true;
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
+    };
 
     const fetchDropdownData = async () => {
         try {
@@ -161,17 +188,12 @@
 
     onMount(fetchData);
 
-    // Function to trigger download of the Excel file
     function downloadExcel() {
         const link = document.createElement("a");
    
-        link.download = "MaterialStock.xlsx"; // Optional: you can change the filename here
+        link.download = "MaterialStock.xlsx"; 
         link.click();
-
-        // Show the success message after download is triggered
         showDownloadMessage = true;
-
-        // Hide the message after 3 seconds
         setTimeout(() => {
             showDownloadMessage = false;
         }, 3000);
@@ -262,7 +284,7 @@
 
             </div>
             <div class="py-4 flex justify-center items-center fixed bottom-0 left-0 right-0 text-center">
-                <button class="text-white bg-black rounded-md px-9 py-2" on:click={downloadExcel}>
+                <button class="text-white bg-black rounded-md px-9 py-2" on:click={downloadexcelms}>
                     Download
                 </button>
             </div>
