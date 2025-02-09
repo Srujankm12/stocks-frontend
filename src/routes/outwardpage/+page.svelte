@@ -37,7 +37,7 @@
   const fetchDropdownData = async () => {
     isLoading = true;
     try {
-      const response = await fetch('http://localhost:8000/outwardDropdown', { method: 'GET' });
+      const response = await fetch('https://stocks-backend-t2bh.onrender.com/outwardDropdown', { method: 'GET' });
       if (response.ok) {
         const data = await response.json();
         dropdownData.set({
@@ -68,7 +68,7 @@
 
     isLoading = true;
     try {
-      const response = await fetch('http://localhost:8000/submitoutward', {
+      const response = await fetch('https://stocks-backend-t2bh.onrender.com/submitoutward', {
         method: 'POST',
 
         body: JSON.stringify(payload),

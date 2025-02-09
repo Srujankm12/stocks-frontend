@@ -35,7 +35,7 @@
 
   const fetchSuppliersAndBuyers = async () => {
     try {
-      const response = await fetch('http://localhost:8000/inward', { method: 'GET' });
+      const response = await fetch('https://stocks-backend-t2bh.onrender.com/inward', { method: 'GET' });
 
       if (response.ok) {
         const data = await response.json();
@@ -76,7 +76,7 @@
     const formPayload = $formData;
 
     try {
-      const response = await fetch('http://localhost:8000/submit', {
+      const response = await fetch('https://stocks-backend-t2bh.onrender.com/submit', {
         method: 'POST',
        
         body: JSON.stringify(formPayload),

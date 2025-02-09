@@ -26,7 +26,7 @@
 
     const fetchDropdownData = async () => {
         try {
-            const response = await fetch('http://localhost:8000/materialstockdropdown');
+            const response = await fetch('https://stocks-backend-t2bh.onrender.com/materialstockdropdown');
             if (response.ok) {
                 const data = await response.json();
                 suppliers = Array.from(new Set(data.map(item => item.supplier)));
@@ -51,7 +51,7 @@
 
         try {
       
-            const response = await fetch('http://localhost:8000/materialstock', {
+            const response = await fetch('https://stocks-backend-t2bh.onrender.com/materialstock', {
                 method: 'POST',
                 
              
