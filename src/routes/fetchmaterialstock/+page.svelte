@@ -178,6 +178,7 @@
                 const jsonResponse = await response.json();
                 data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
                 console.log(data);
+                filteredData = [...data];
             } else {
                 console.error("Failed to fetch data:", response.statusText);
             }
@@ -201,12 +202,18 @@
         }, 3000);
     }
     function searchTable() {
-        const query = searchQuery.toLowerCase();
-        filteredData = data.filter(item => 
-            item.supplier.toLowerCase().includes(query) || 
-            item.category.toLowerCase().includes(query)
-        );
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) {
+        filteredData = [...data]; // Reset when search query is empty
+        return;
     }
+
+    filteredData = data.filter(row => {
+        const supplierName = row.supplier?.toLowerCase() || ""; 
+        const categoryName = row.category?.toLowerCase() || ""; 
+        return engineerName.includes(query) || customerName.includes(query);
+    });
+}
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
@@ -258,7 +265,7 @@
                                 <td colspan="18" class="py-4 text-center text-gray-600">No data available</td>
                             </tr>
                         {:else}
-                            {#each data as row , index}
+                            {#each filteredData as row , index}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
                                     <td class="py-3 px-4 whitespace-nowrap">{index+1}</td>
                                     <td class="py-3 px-4 text-center">{row.supplier}</td>
