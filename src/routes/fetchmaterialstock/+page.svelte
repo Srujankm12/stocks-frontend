@@ -211,7 +211,7 @@
     filteredData = data.filter(row => {
         const supplierName = row.supplier?.toLowerCase() || ""; 
         const categoryName = row.category?.toLowerCase() || ""; 
-        return engineerName.includes(query) || customerName.includes(query);
+        return supplierName.includes(query) || categoryName.includes(query);
     });
 }
 </script>
