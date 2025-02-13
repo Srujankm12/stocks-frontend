@@ -7,6 +7,8 @@
     let filteredData = [];
     let isLoading = true;
     let searchQuery = "";
+    let showDownloadMessage = false;
+    let expandedRow = null;
 
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
     const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
@@ -80,7 +82,7 @@
 
     onMount(fetchData);
 
-    $: searchQuery, searchTable(); 
+  
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
@@ -181,7 +183,7 @@
             </div>
             <div class="py-4 flex justify-center items-center fixed bottom-0 left-0 right-0 text-center">
                 <button class="text-white bg-black rounded-md px-9 py-2" 
-                on:click={downloadexcelmaterialoutward}
+                on:click={downloadExcelMaterialOutward}
                 >
                     Download
                 </button>
