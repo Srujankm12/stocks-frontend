@@ -2,23 +2,35 @@
     import { onMount } from "svelte";
     import Header from "$lib/header.svelte";
     import { fade } from "svelte/transition";
-    let data = [];
-    let isLoading = true;
-    let expandedRow = null;
-    let showDownloadMessage = false; 
-    let filteredData =[];
-    let searchQuery = "";
 
+    let data = [];
+    let filteredData = [];
+    let isLoading = true;
+    let searchQuery = "";
 
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
     const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
 
-
-    const downloadexcelmaterialoutward = async () => {
+    async function fetchData() {
         try {
-            const response = await fetch(downloadexcelmo, {
-                method: "GET",                     
-            });
+            const response = await fetch(apiUrl);
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
+                filteredData = [...data]; 
+            } else {
+                console.error("Failed to fetch data:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    async function downloadExcelMaterialOutward() {
+        try {
+            const response = await fetch(downloadexcelmo, { method: "GET" });
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -33,63 +45,42 @@
         } catch (error) {
             console.error("Error downloading Excel file:", error);
         }
-        showDownloadMessage = true;
-        setTimeout(() => {
-            showDownloadMessage = false;
-        }, 3000);
-    };
+    }
 
     function convertToIST(timestamp) {
-    if (!timestamp) {
-        console.error("Invalid timestamp:", timestamp);
-        return "Invalid Date";
+        if (!timestamp) return "Invalid Date";
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) return "Invalid Date";
+
+        return new Intl.DateTimeFormat("en-IN", {
+            timeZone: "Asia/Kolkata",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+        }).format(date).replace(/(AM|PM)/g, (match) => ` ${match}`);
     }
 
-
-    const date = new Date(timestamp);
-    if (isNaN(date.getTime())) {
-        console.error("Invalid Date:", timestamp);
-        return "Invalid Date";
-    }
-
-    const options = {
-        timeZone: "Asia/Kolkata",
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-    };
-
-    return new Intl.DateTimeFormat("en-IN", options)
-        .format(date)
-        .replace(/(AM|PM)/g, (match) => ` ${match}`); 
-}
-
-    onMount(async () => {
-        try {
-            const response = await fetch(apiUrl);
-            if (response.ok) {
-                const jsonResponse = await response.json();
-                data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
-            } else {
-                console.error("Failed to fetch data:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            isLoading = false;
-        }
-    });
     function searchTable() {
-        const query = searchQuery.toLowerCase();
-        filteredData = data.filter(item => 
-            item.seller.toLowerCase().includes(query) || 
-            item.customer.toLowerCase().includes(query)
-        );
+        const query = searchQuery.toLowerCase().trim();
+        if (!query) {
+            filteredData = [...data]; 
+            return;
+        }
+
+        filteredData = data.filter(row => {
+            const sellerName = row.seller?.toLowerCase() || "";
+            const customerName = row.customer?.toLowerCase() || "";
+            return sellerName.includes(query) || customerName.includes(query);
+        });
     }
+
+    onMount(fetchData);
+
+    $: searchQuery, searchTable(); 
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
@@ -139,7 +130,7 @@
                                 <td colspan="16" class="py-4 text-center text-gray-600">No data available</td>
                             </tr>
                         {:else}
-                            {#each data as row, index}
+                            {#each filteredData as row, index}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
                                     <td class="py-3 px-4 whitespace-nowrap">
                                       {row.timestamp}</td>
