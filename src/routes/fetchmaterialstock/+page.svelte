@@ -22,13 +22,14 @@
         issue: "",
         reserved_stock: ""
     };
-  
+    let filteredData = [];
+    let searchQuery = "";
     let isUpdating = false;
     let showDownloadMessage = false; 
 
-    const apiUrl = "http://localhost:8000/materialstockdata";
-    const updateUrl = "http://localhost:8000/materialupdate";
-    const downlaodUrlms = "http://localhost:8000/materialstockdownload";
+    const apiUrl = "https://stocks-backend-t2bh.onrender.com/materialstockdata";
+    const updateUrl = "https://stocks-backend-t2bh.onrender.com/materialupdate";
+    const downlaodUrlms = "https://stocks-backend-t2bh.onrender.com/materialstockdownload";
 
     let suppliers = [];
     let categories = [];
@@ -63,7 +64,7 @@
 
     const fetchDropdownData = async () => {
         try {
-            const response = await fetch('http://localhost:8000/materialstockdropdown');
+            const response = await fetch('https://stocks-backend-t2bh.onrender.com/materialstockdropdown');
             if (response.ok) {
                 const data = await response.json();
 
@@ -198,12 +199,28 @@
             showDownloadMessage = false;
         }, 3000);
     }
+    function searchTable() {
+        const query = searchQuery.toLowerCase();
+        filteredData = data.filter(item => 
+            item.supplier.toLowerCase().includes(query) || 
+            item.category.toLowerCase().includes(query)
+        );
+    }
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
 
-    <main class="flex-grow py-28 px-2">
+    <main class="flex-grow py-24 px-2">
+        <div class="relative w-full flex justify-end bg-white">
+            <input
+              type="text"
+              bind:value={searchQuery}
+              on:input={searchTable}
+              placeholder="Search by Engineer or Customer Name"
+              class="px-3 py-1  w-80 mb-4 shadow-md border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none "
+            />
+          </div>
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
                 <div class="animate-spin h-12 w-12 rounded-full border-t-4 border-gray-800 border-gray-300"></div>

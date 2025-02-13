@@ -6,10 +6,12 @@
     let isLoading = true;
     let expandedRow = null;
     let showDownloadMessage = false; 
+    let filteredData =[];
+    let searchQuery = "";
 
 
-    const apiUrl = "http://localhost:8000/fetchoutward";
-    const downloadexcelmo = "http://localhost:8000/downloadoutward";
+    const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
+    const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
 
 
     const downloadexcelmaterialoutward = async () => {
@@ -81,12 +83,29 @@
             isLoading = false;
         }
     });
+    function searchTable() {
+        const query = searchQuery.toLowerCase();
+        filteredData = data.filter(item => 
+            item.seller.toLowerCase().includes(query) || 
+            item.customer.toLowerCase().includes(query)
+        );
+    }
 </script>
 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
+  
 
-    <main class="flex-grow py-28 px-2">
+    <main class="flex-grow py-24 px-2">
+        <div class="relative w-full flex justify-end bg-white">
+            <input
+              type="text"
+              bind:value={searchQuery}
+              on:input={searchTable}
+              placeholder="Search by Engineer or Customer Name"
+              class="px-3 py-1  w-80 mb-4 shadow-md border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none "
+            />
+          </div>
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
                 <div class="animate-spin h-12 w-12 rounded-full border-t-4 border-gray-800 border-gray-300"></div>
@@ -165,6 +184,7 @@
                                 {/if}
                             {/each}
                         {/if}
+                        
                     </tbody>
                 </table>
             </div>
@@ -182,5 +202,4 @@
         Excel downloaded successfully!
     </div>
 {/if}
-  
 </div>

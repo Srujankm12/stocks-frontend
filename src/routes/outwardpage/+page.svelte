@@ -115,31 +115,8 @@
   <Header />
   
 
-  <main class="flex-grow container mx-auto px-6 py-20 grid lg:grid-cols-2 gap-10">
-    <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-start items-start space-y-6">
-  <div class="w-full overflow-hidden rounded-lg">
-    <img src="image.webp" alt="Material Tracking" class="w-full h-auto mb-4 object-cover transition-transform duration-500 hover:scale-105" />
-  </div>
-  <h2 class="text-3xl font-semibold text-gray-900">Why Choose Us?</h2>
-  <ul class="space-y-4 text-gray-700 text-lg">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-3">•</span>
-      Automate data collection for inventory accuracy.
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-3">•</span>
-      Centralize supplier and buyer details for quick access.
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-3">•</span>
-      Ensure compliance with precise record keeping.
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-3">•</span>
-      Optimize cost tracking with unit price details.
-    </li>
-  </ul>
-</div>
+  <main class="flex-grow container mx-auto px-6 py-24 grid lg:grid-cols-1 gap-10">
+   
 
     <form on:submit={handleSubmit} class="bg-white shadow-xl rounded-lg p-8 space-y-8">
       <h2 class="text-3xl font-semibold text-gray-900 mb-8">Enter Material Outward Details</h2>
