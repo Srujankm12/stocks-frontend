@@ -4,14 +4,9 @@
     import { fade } from "svelte/transition";
 
     let data = [];
-    let filteredData = [];
     let isLoading = true;
     let selectedRow = null;
     let showUpdateModal = false;
-    let isUpdating = false;
-    let showDownloadMessage = false;
-    let searchQuery = "";
-
     let updateData = {
         id: "",
         supplier: "",
@@ -27,20 +22,26 @@
         issue: "",
         reserved_stock: ""
     };
+    let filteredData = [];
+
+    let searchQuery = "";
+    let isUpdating = false;
+    let showDownloadMessage = false; 
 
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/materialstockdata";
     const updateUrl = "https://stocks-backend-t2bh.onrender.com/materialupdate";
-    const downloadUrl = "https://stocks-backend-t2bh.onrender.com/materialstockdownload";
-    const dropdownUrl = "https://stocks-backend-t2bh.onrender.com/materialstockdropdown";
+    const downlaodUrlms = "https://stocks-backend-t2bh.onrender.com/materialstockdownload";
 
     let suppliers = [];
     let categories = [];
     let units = [];
 
-    const downloadExcel = async () => {
+    const downloadexcelms = async () => {
         try {
-            const response = await fetch(downloadUrl, { method: "GET" });
-
+            const response = await fetch(downlaodUrlms, {
+                method: "GET",
+               
+            });
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -57,17 +58,20 @@
         }
 
         showDownloadMessage = true;
-        setTimeout(() => (showDownloadMessage = false), 3000);
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
     };
 
     const fetchDropdownData = async () => {
         try {
-            const response = await fetch(dropdownUrl);
+            const response = await fetch('https://stocks-backend-t2bh.onrender.com/materialstockdropdown');
             if (response.ok) {
-                const jsonResponse = await response.json();
-                suppliers = [...new Set(jsonResponse.map(item => item.supplier))];
-                categories = [...new Set(jsonResponse.map(item => item.category))];
-                units = [...new Set(jsonResponse.map(item => item.unit))];
+                const data = await response.json();
+
+                suppliers = Array.from(new Set(data.map(item => item.supplier)));
+                categories = Array.from(new Set(data.map(item => item.category)));
+                units = Array.from(new Set(data.map(item => item.unit)));
             } else {
                 console.error('Error fetching dropdown data:', response.statusText);
             }
@@ -75,6 +79,97 @@
             console.error('Error fetching dropdown data:', error);
         }
     };
+    fetchDropdownData();
+
+    function convertToIST(timestamp) {
+        if (!timestamp) {
+            console.error("Invalid timestamp:", timestamp);
+            return "Invalid Date";
+        }
+
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) {
+            console.error("Invalid Date:", timestamp);
+            return "Invalid Date";
+        }
+
+        const options = {
+            timeZone: "Asia/Kolkata",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+        };
+
+        return new Intl.DateTimeFormat("en-IN", options)
+            .format(date)
+            .replace(/(AM|PM)/g, (match) => ` ${match}`);
+    }
+
+    function openUpdateModal(row) {
+        updateData = {
+            id: row.id,
+            supplier: row.supplier,
+            category: row.category,
+            lead_time: row.lead_time,
+            std_non_std: row.std_non_std,
+            part_code: row.part_code,
+            unit: row.unit,
+            rate: row.rate,
+            minimum_retain: row.minimum_retain,
+            maximum_retain: row.maximum_retain,
+            received: row.received,
+            issue: row.issue,
+            reserved_stock: row.reserved_stock
+        };
+        selectedRow = row; 
+        showUpdateModal = true;
+    }
+
+    async function updateStock(event) {
+        event.preventDefault();
+        isUpdating = true;
+        try {
+            const updatedFields = {};
+        
+            Object.keys(updateData).forEach(key => {
+                if (updateData[key] !== selectedRow[key]) {
+                    updatedFields[key] = updateData[key];
+                }
+            });
+
+            if (Object.keys(updatedFields).length === 0) {
+                console.log("No fields updated.");
+                return;
+            }
+
+            const updatedData = {
+                ...selectedRow, 
+                ...updatedFields, 
+            };
+
+            const response = await fetch(updateUrl, {
+                method: "POST", 
+                body: JSON.stringify(updatedData),
+            });
+
+            if (response.ok) {
+                console.log("Stock updated successfully");
+                showUpdateModal = false;
+                selectedRow = null;
+                await fetchData(); 
+            } else {
+                console.error("Failed to update stock:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error updating stock:", error);
+        } finally {
+            isUpdating = false;
+        }
+    }
 
     async function fetchData() {
         try {
@@ -82,7 +177,7 @@
             if (response.ok) {
                 const jsonResponse = await response.json();
                 data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
-                filteredData = [...data]; // Ensure UI updates
+                console.log(data);
             } else {
                 console.error("Failed to fetch data:", response.statusText);
             }
@@ -93,83 +188,26 @@
         }
     }
 
-    onMount(() => {
-        fetchData();
-        fetchDropdownData();
-    });
+    onMount(fetchData);
 
-    function openUpdateModal(row) {
-        updateData = { ...row }; // Copy row data to updateData
-        selectedRow = row;
-        showUpdateModal = true;
+    function downloadExcel() {
+        const link = document.createElement("a");
+   
+        link.download = "MaterialStock.xlsx"; 
+        link.click();
+        showDownloadMessage = true;
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
     }
-
-    async function updateStock(event) {
-        event.preventDefault();
-        isUpdating = true;
-
-        try {
-            const updatedFields = {};
-
-            Object.keys(updateData).forEach(key => {
-                if (updateData[key] !== selectedRow[key]) {
-                    updatedFields[key] = updateData[key];
-                }
-            });
-
-            if (Object.keys(updatedFields).length === 0) {
-                console.log("No changes made.");
-                isUpdating = false;
-                return;
-            }
-
-            const updatedData = { ...selectedRow, ...updatedFields };
-
-            const response = await fetch(updateUrl, {
-                method: "POST",
-                body: JSON.stringify(updatedData),
-            });
-
-            if (response.ok) {
-                console.log("Stock updated successfully.");
-                showUpdateModal = false;
-                await fetchData(); // Refresh data
-            } else {
-                console.error("Failed to update stock:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error updating stock:", error);
-        } finally {
-            isUpdating = false;
-            selectedRow = null;
-        }
+    function searchTable() {
+        const query = searchQuery.toLowerCase();
+        filteredData = data.filter(item => 
+            item.supplier.toLowerCase().includes(query) || 
+            item.category.toLowerCase().includes(query)
+        );
     }
-
-    function convertToIST(timestamp) {
-        if (!timestamp) return "Invalid Date";
-
-        const date = new Date(timestamp);
-        if (isNaN(date.getTime())) return "Invalid Date";
-
-        return new Intl.DateTimeFormat("en-IN", {
-            timeZone: "Asia/Kolkata",
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-        }).format(date);
-    }
-
-
-    $: filteredData = data.filter(item => 
-        item.supplier?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        item.category?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 </script>
-
 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
@@ -180,7 +218,7 @@
               type="text"
               bind:value={searchQuery}
               on:input={searchTable}
-              placeholder="Search by Engineer or Customer Name"
+              placeholder="Search by supplier or category"
               class="px-3 py-1  w-80 mb-4 shadow-md border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none "
             />
           </div>

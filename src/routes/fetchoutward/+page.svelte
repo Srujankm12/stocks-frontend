@@ -2,22 +2,23 @@
     import { onMount } from "svelte";
     import Header from "$lib/header.svelte";
     import { fade } from "svelte/transition";
-
     let data = [];
-    let filteredData = [];
     let isLoading = true;
     let expandedRow = null;
-    let showDownloadMessage = false;
+    let showDownloadMessage = false; 
+    let filteredData =[];
     let searchQuery = "";
 
+
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
-    const downloadUrl = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
+    const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
 
-    // Function to download Excel file
-    const downloadExcelMaterialOutward = async () => {
+
+    const downloadexcelmaterialoutward = async () => {
         try {
-            const response = await fetch(downloadUrl, { method: "GET" });
-
+            const response = await fetch(downloadexcelmo, {
+                method: "GET",                     
+            });
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -26,50 +27,53 @@
                 a.download = "outwarddata.xlsx";
                 a.click();
                 window.URL.revokeObjectURL(url);
-
-                showDownloadMessage = true;
-                setTimeout(() => (showDownloadMessage = false), 3000);
             } else {
                 console.error("Failed to download Excel file:", response.statusText);
             }
         } catch (error) {
             console.error("Error downloading Excel file:", error);
         }
+        showDownloadMessage = true;
+        setTimeout(() => {
+            showDownloadMessage = false;
+        }, 3000);
     };
 
-    // Convert timestamp to IST
     function convertToIST(timestamp) {
-        if (!timestamp) {
-            console.error("Invalid timestamp:", timestamp);
-            return "Invalid Date";
-        }
-
-        const date = new Date(timestamp);
-        if (isNaN(date.getTime())) {
-            console.error("Invalid Date:", timestamp);
-            return "Invalid Date";
-        }
-
-        return new Intl.DateTimeFormat("en-IN", {
-            timeZone: "Asia/Kolkata",
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-        }).format(date);
+    if (!timestamp) {
+        console.error("Invalid timestamp:", timestamp);
+        return "Invalid Date";
     }
 
-    // Fetch data on mount
+
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+        console.error("Invalid Date:", timestamp);
+        return "Invalid Date";
+    }
+
+    const options = {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+    };
+
+    return new Intl.DateTimeFormat("en-IN", options)
+        .format(date)
+        .replace(/(AM|PM)/g, (match) => ` ${match}`); 
+}
+
     onMount(async () => {
         try {
             const response = await fetch(apiUrl);
             if (response.ok) {
                 const jsonResponse = await response.json();
                 data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
-                filteredData = [...data]; // Ensure filteredData is initialized
             } else {
                 console.error("Failed to fetch data:", response.statusText);
             }
@@ -79,15 +83,14 @@
             isLoading = false;
         }
     });
-
-    // Search filter function (reactive)
-    $: filteredData = data.filter(item => 
-        item.seller?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        item.customer?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+    function searchTable() {
+        const query = searchQuery.toLowerCase();
+        filteredData = data.filter(item => 
+            item.seller.toLowerCase().includes(query) || 
+            item.customer.toLowerCase().includes(query)
+        );
+    }
 </script>
-
 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
@@ -99,7 +102,7 @@
               type="text"
               bind:value={searchQuery}
               on:input={searchTable}
-              placeholder="Search by seller or customer name"
+              placeholder="Search by seller or customer"
               class="px-3 py-1  w-80 mb-4 shadow-md border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none "
             />
           </div>
