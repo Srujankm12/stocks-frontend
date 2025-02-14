@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import { onMount } from "svelte";
     import Header from "$lib/header.svelte";
     import { fade } from "svelte/transition";
@@ -214,8 +214,8 @@
         return supplierName.includes(query) || categoryName.includes(query);
     });
 }
-</script>
-
+</script> -->
+<!-- 
 <div class="min-h-screen flex flex-col bg-white">
     <Header />
 
@@ -293,7 +293,7 @@
                                     <td class="py-3 px-4 text-center">₹{row.excess_stock_value}</td>
                                     <td class="py-3 px-4 text-center">
                                         <!-- svelte-ignore a11y_consider_explicit_label -->
-                                        <button
+                                      <!--  <button
                                             class="text-xl font-medium rounded-full flex items-center justify-center text-center"
                                             on:click={() => openUpdateModal(row)}
                                         >
@@ -359,17 +359,17 @@
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Lead Time</label>
+                       <!--     <label class="block text-gray-700">Lead Time</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.lead_time} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Std/Non-Std</label>
+                        <!--    <label class="block text-gray-700">Std/Non-Std</label>
                             <input type="text" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.std_non_std} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Part Code</label>
+                        <!--    <label class="block text-gray-700">Part Code</label>
                             <input type="text" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.part_code} required />
                         </div>
                         <div>
@@ -388,32 +388,32 @@
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Rate</label>
+                    <!--        <label class="block text-gray-700">Rate</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.rate} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Minimum Retain</label>
+                        <!--    <label class="block text-gray-700">Minimum Retain</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.minimum_retain} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Maximum Retain</label>
+                        <!--    <label class="block text-gray-700">Maximum Retain</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.maximum_retain} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Received</label>
+                        <!--    <label class="block text-gray-700">Received</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.received} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Issue</label>
+                       <!--     <label class="block text-gray-700">Issue</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.issue} required />
                         </div>
                         <div>
                             <!-- svelte-ignore a11y_label_has_associated_control -->
-                            <label class="block text-gray-700">Reserved Stock</label>
+                       <!--     <label class="block text-gray-700">Reserved Stock</label>
                             <input type="number" class="w-full px-4 py-2 border rounded-md" bind:value={updateData.reserved_stock} required />
                         </div>
                     </div>
@@ -426,9 +426,9 @@
                             {/if}
                         </button>
                     </div>
-                </form>
+                </form> -->
                 <!-- svelte-ignore a11y_consider_explicit_label -->
-                <button
+                <!-- <button
                     class="absolute top-4 right-4 text-gray-500"
                     on:click={() => showUpdateModal = false}
                 >
@@ -437,4 +437,4 @@
             </div>
         </div>
     {/if}
-</div>
+</div>  -->

@@ -38,7 +38,7 @@
               </button>
             </div>
           </div>
-          <div class="p-4">
+          <!-- <div class="p-4">
             <div class="border-b-[5px] border-l-[5px]rounded-2xl p-6 bg-white flex flex-col h-72 duration-75 hover:border-l-0 hover:border-b-0 shadow-lg">
               <span class="text-start mt-2 text-2xl font-semibold">Material Stock</span>
               <div class="flex-grow"></div>
@@ -49,7 +49,7 @@
                 Manage
               </button>
             </div>
-          </div>
+          </div> -->
           
          
           
