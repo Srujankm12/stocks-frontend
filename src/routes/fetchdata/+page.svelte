@@ -146,9 +146,9 @@ function searchTable() {
                                 <td colspan="16" class="py-4 text-center text-gray-600">No data available</td>
                             </tr>
                         {:else}
-                            {#each filteredData as row, index  }
+                            {#each filteredData as row, index(row.id)  }
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
-                                    <td class="py-3 px-4 text-center">{row.id}</td>
+                              <td class="py-3 px-4 text-center">{index + 1}</td>
                                     <td class="py-3 px-4 whitespace-nowrap">{row.timestamp}</td>
                                     <td class="py-3 px-4 text-center">{row.supplier}</td>
                                     <td class="py-3 px-4 text-center">{row.buyer}</td>
