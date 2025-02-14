@@ -63,11 +63,11 @@
             <table class="w-full border-collapse text-sm text-black">
                 <thead class="bg-black text-white">
                         <tr>
-                            <th class="py-3 px-4 text-left">Part Code</th>
-                            <th class="py-3 px-4 text-left">Received</th>
-                            <th class="py-3 px-4 text-left">Issued</th>
-                            <th class="py-3 px-4 text-left">Stock</th>
-                            <th class="py-3 px-4 text-left">Reorder Status</th>
+                            <th class="py-3 px-4 text-center">Part Code</th>
+                            <th class="py-3 px-4 text-center">Received</th>
+                            <th class="py-3 px-4 text-center">Issued</th>
+                            <th class="py-3 px-4 text-center">Stock</th>
+                            <th class="py-3 px-4 text-center">Reorder Status</th>
                         </tr>
                     </thead>
                     <tbody>
