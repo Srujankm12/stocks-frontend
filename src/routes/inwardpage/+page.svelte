@@ -11,7 +11,7 @@
   }
 
   let formData = writable({
-    id: '',
+    id: null,
     timestamp: '',
     supplier: '',
     buyer: '',
@@ -87,7 +87,7 @@
         console.log('Data submitted successfully:', responseData);
 
         formData.set({
-          id: '',
+          id: null,
           timestamp: '',
           supplier: '',
           buyer: '',

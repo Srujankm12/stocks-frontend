@@ -73,15 +73,15 @@
                     <tbody>
                         {#each searchTable() as mat}
                         <tr class="border-t border-gray-300 hover:bg-gray-200">
-                                <td class="py-3 px-4">{mat.part_code}</td>
-                                <td class="py-3 px-4">{mat.received}</td>
-                                <td class="py-3 px-4">{mat.issued}</td>
-                                <td class="py-3 px-4">{mat.stock}</td>
-                                <td class="py-3 px-4">
+                                <td class="py-3 px-4 text-center">{mat.part_code}</td>
+                                <td class="py-3 px-4 text-center">{mat.received}</td>
+                                <td class="py-3 px-4 text-center">{mat.issued}</td>
+                                <td class="py-3 px-4 text-center">{mat.stock}</td>
+                                <td class="py-3 px-4 text-center">
                                     {#if mat.reorder_status}
                                         <span class="text-red-400 font-bold">⚠️ Reorder Needed</span>
                                     {:else}
-                                        <span class="text-green-400">✔ In Stock</span>
+                                        <span class="text-green-500">✔ In Stock</span>
                                     {/if}
                                 </td>
                             </tr>
