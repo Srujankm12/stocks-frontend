@@ -74,6 +74,14 @@
                     <li>
                         <button
                             class="w-full text-left text-lg font-medium text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-lg"
+                            on:click={() => { goto('/fetch'); toggleDrawer(); }}
+                        >
+                            <i class="fa-solid fa-user-cog mr-3"></i> FM
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="w-full text-left text-lg font-medium text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-lg"
                             on:click={() => { goto('/'); toggleDrawer(); }}
                         >
                             <i class="fa-solid fa-sign-out-alt mr-3"></i> Logout
