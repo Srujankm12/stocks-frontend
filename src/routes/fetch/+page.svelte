@@ -67,7 +67,9 @@
                             <th class="py-3 px-4 text-center">Received</th>
                             <th class="py-3 px-4 text-center">Issued</th>
                             <th class="py-3 px-4 text-center">Stock</th>
+                            <th class="py-3 px-4 text-center">Stock Value</th>
                             <th class="py-3 px-4 text-center">Reorder Status</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +79,8 @@
                                 <td class="py-3 px-4 text-center">{mat.received}</td>
                                 <td class="py-3 px-4 text-center">{mat.issued}</td>
                                 <td class="py-3 px-4 text-center">{mat.stock}</td>
+                                <td class="py-3 px-4 text-center">{mat.stock_value}</td>
+                                
                                 <td class="py-3 px-4 text-center">
                                     {#if mat.reorder_status}
                                         <span class="text-red-400 font-bold">⚠️ Reorder Needed</span>
