@@ -14,8 +14,6 @@
     let selectedRow = null;
     let isUpdating = false;
 
-    
-    
     const updateData = {
         id: "",
         supplier: "",
@@ -91,7 +89,11 @@
 
     const fetchSuppliersAndBuyers = async () => {
         try {
-            const response = await fetch('https://stocks-backend-t2bh.onrender.com/inward', { method: 'GET' });
+            const response = await fetch('https://stocks-backend-t2bh.onrender.com/inward', 
+            {
+                 method: 'GET'
+
+                 });
 
             if (response.ok) {
                 const data = await response.json();
