@@ -9,6 +9,13 @@
     let searchQuery = "";
     let showDownloadMessage = false;
     let expandedRow = null;
+    let showUpdateModal = false;
+   
+    let selectedRow = null;
+    const updateData = {
+      
+};
+
 
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
     const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
@@ -65,6 +72,11 @@
             hour12: true,
         }).format(date).replace(/(AM|PM)/g, (match) => ` ${match}`);
     }
+    function openUpdateModal(row) {
+     
+     selectedRow = row; 
+     showUpdateModal = true;
+ }
 
     function searchTable() {
         const query = searchQuery.toLowerCase().trim();
@@ -108,6 +120,7 @@
                 <table class="w-full border-collapse text-sm text-black">
                     <thead class="bg-black text-white">
                         <tr>
+                            <th class="py-3 px-4">ID</th>
                             <th class="py-3 px-4">Timestamp</th>
                             <th class="py-3 px-4">Seller</th>
                             <th class="py-3 px-4">Customer</th>
@@ -134,6 +147,7 @@
                         {:else}
                             {#each filteredData as row, index}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
+                                    <td class="py-3 px-4 text-center">{index + 1}</td>
                                     <td class="py-3 px-4 whitespace-nowrap">
                                       {row.timestamp}</td>
                                     <td class="py-3 px-4 text-center">{row.seller}</td>
@@ -153,28 +167,16 @@
                                         {row.warranty_due_days > 0 ? `${row.warranty_due_days} days remaining` : "Expired"}
                                     </td>
                                     <td class="py-3 px-4 text-center">
-                                        <button
-                                            class="bg-black text-white text-xs px-2 py-1 rounded hover:bg-gray-800 transition"
-                                            on:click={() => expandedRow = expandedRow === index ? null : index}>
-                                            {expandedRow === index ? "Hide" : "View"}
+                                        <!-- svelte-ignore a11y_consider_explicit_label -->
+                                     <button
+                                            class="text-xl font-medium rounded-full flex items-center justify-center text-center"
+                                            on:click={() => openUpdateModal(row)}
+                                        >
+                                            <i class="fas fa-edit"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                {#if expandedRow === index}
-                                    <tr class="bg-gray-200">
-                                        <td colspan="16" class="py-4 px-6 text-sm text-gray-700">
-                                            <p><strong>Seller:</strong> {row.seller}</p>
-                                            <p><strong>Customer:</strong> {row.customer}</p>
-                                            <p><strong>Part Code:</strong> {row.partcode}</p>
-                                            <p><strong>Serial Number:</strong> {row.serial_number}</p>
-                                            <p><strong>Quantity:</strong> {row.qty}</p>
-                                            <p><strong>Unit Price:</strong> ₹{row.unit_price_per_qty.toFixed(2)}</p>
-                                            <p><strong>Category:</strong> {row.category}</p>
-                                            <p><strong>Warranty:</strong> {row.warranty} Days</p>
-                                            <p><strong>Warranty Due Days:</strong> {row.warranty_due_days}</p>
-                                        </td>
-                                    </tr>
-                                {/if}
+                              
                             {/each}
                         {/if}
                         
@@ -196,3 +198,22 @@
     </div>
 {/if}
 </div>
+{#if showUpdateModal}
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" transition:fade>
+            <div class="w-full max-w-2xl mx-4 bg-white rounded-lg p-6 shadow-md relative">
+                <h1 class="text-center text-xl py-2 mb-6 font-medium text-gray-900">Update InwardData</h1>
+
+             
+                            
+                       
+          
+            
+                 <button
+                    class="absolute top-4 right-4 text-gray-500"
+                    on:click={() => showUpdateModal = false}
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    {/if}
