@@ -38,9 +38,9 @@
         warranty: "",
 };
 function openUpdateModal(row) {
-        selectedRow = row;
-        showUpdateModal = true;
-        updateData.id = row.id;
+      selectedRow = row;
+      showUpdateModal = true;
+      updateData.id = row.id;
       updateData.customer = row.customer || "";
       updateData.seller = row.seller || "";
       updateData.branch_region = row.branch_region || "";
@@ -231,7 +231,7 @@ function openUpdateModal(row) {
           </div>
         {#if isLoading}
             <div class="flex justify-center items-center h-full">
-                <div class="animate-spin h-12 w-12 rounded-full border-t-4 border-gray-800 border-gray-300"></div>
+                <div class="animate-spin h-12 w-12 rounded-full border-t-4 border-gray-800"></div>
             </div>
         {:else}
             <div class="overflow-x-auto bg-gray-100 shadow-lg rounded-lg">
@@ -421,22 +421,7 @@ function openUpdateModal(row) {
 
 
             </div>
-            
-              
-
-                
-
-
-
-
-
-
-
-
-             
-                            
-                       
-          
+       
             <div class="mt-6 flex justify-end gap-4">
             <button on:click={() => showUpdateModal = false} class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">Cancel</button>
        <button on:click={updateOutwardData} class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button> 
