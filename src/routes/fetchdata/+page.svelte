@@ -3,16 +3,19 @@
     import Header from "$lib/header.svelte";
     import { fade } from "svelte/transition";
 
+    
     let data = [];
     let isLoading = true;
     let expandedRow = null;
-    let showDownloadMessage = false;
-    let filteredData = [];
+    let showDownloadMessage = false; 
+    let filteredData =[];
     let searchQuery = "";
     let showUpdateModal = false;
     let selectedRow = null;
     let isUpdating = false;
 
+    
+    
     const updateData = {
         id: "",
         supplier: "",
@@ -26,83 +29,64 @@
         po_date: "",
         invoice_no: "",
         invoice_date: "",
-        received_date: "",
+        received_date : "",
         warranty: ""
+     
     };
 
     const apiUrl = "https://stocks-backend-t2bh.onrender.com/getlist";
-    const downloadUrl = "https://stocks-backend-t2bh.onrender.com/downloadinward";
-    const updateUrl = "https://stocks-backend-t2bh.onrender.com/update";
+    const downlaodUrl = "https://stocks-backend-t2bh.onrender.com/downloadinward";
+    const updateurl = "https://stocks-backend-t2bh.onrender.com/update";
 
     let suppliers = [];
     let buyers = [];
     let categories = [];
 
-    // Function to fetch data from API
-    async function fetchData() {
-        isLoading = true;
-        try {
-            const response = await fetch(apiUrl);
-            if (response.ok) {
-                const jsonResponse = await response.json();
-                data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
-                filteredData = [...data]; // Update filtered data
-                console.log("Fetched Data:", filteredData);
-            } else {
-                console.error("Failed to fetch data:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            isLoading = false;
-        }
-    }
-
     async function updateInwardData(event) {
-        event.preventDefault();
-        isUpdating = true;
-        try {
-            const updatedFields = {};
-
-            Object.keys(updateData).forEach(key => {
-                if (updateData[key] !== selectedRow[key]) {
-                    updatedFields[key] = updateData[key];
-                }
-            });
-
-            if (Object.keys(updatedFields).length === 0) {
-                console.log("No fields updated.");
-                return;
+    event.preventDefault();
+    isUpdating = true;
+    try {
+        const updatedFields = {};
+    
+        Object.keys(updateData).forEach(key => {
+            if (updateData[key] !== selectedRow[key]) {
+                updatedFields[key] = updateData[key];
             }
+        });
 
-            const updatedData = {
-                ...selectedRow,
-                ...updatedFields,
-            };
-
-            console.log("Updated Data:", updatedData);
-
-            const response = await fetch(updateUrl, {
-                method: "POST",
-             
-                body: JSON.stringify(updatedData),
-            });
-
-            if (response.ok) {
-                console.log("Inward updated successfully");
-                showUpdateModal = false;
-                selectedRow = null;
-                await fetchData(); // Fetch updated data
-            } else {
-                const errorMessage = await response.text();
-                console.error("Failed to update inwarddata:", errorMessage);
-            }
-        } catch (error) {
-            console.error("Error updating Inwarddata:", error);
-        } finally {
-            isUpdating = false;
+        if (Object.keys(updatedFields).length === 0) {
+            console.log("No fields updated.");
+            return;
         }
+
+        const updatedData = {
+            ...selectedRow, 
+            ...updatedFields, 
+        };
+
+        console.log("Updated Data:", updatedData);
+
+        const response = await fetch(updateurl, {
+            method: "POST",
+          
+            body: JSON.stringify(updatedData),
+        });
+
+        if (response.ok) {
+            console.log("Inward updated successfully");
+            showUpdateModal = false; 
+            selectedRow = null;
+            fetchData(); 
+        } else {
+            const errorMessage = await response.text();  
+            console.error("Failed to update inwarddata:", errorMessage);
+        }
+    } catch (error) {
+        console.error("Error updating Inwarddata:", error);
+    } finally {
+        isUpdating = false;
     }
+}
 
     const fetchSuppliersAndBuyers = async () => {
         try {
@@ -132,12 +116,12 @@
 
     onMount(async () => {
         await fetchSuppliersAndBuyers();
-        await fetchData();
+     
     });
 
-    const downloadExcel = async () => {
+    const downloadexcel = async () => {
         try {
-            const response = await fetch(downloadUrl, { method: "GET" });
+            const response = await fetch(downlaodUrl, { method: "GET" });
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -159,6 +143,7 @@
         }, 3000);
     };
 
+    // Convert timestamp to IST format
     function convertToIST(timestamp) {
         if (!timestamp) return "Invalid Date";
 
@@ -182,6 +167,27 @@
             .replace(/(AM|PM)/g, (match) => ` ${match}`);
     }
 
+    // Fetch data and set filtered data
+    onMount(async () => {
+    
+        try {
+            const response = await fetch(apiUrl);
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
+                filteredData = [...data];  // Initialize filtered data
+                console.log(filteredData);
+            } else {
+                console.error("Failed to fetch data:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            isLoading = false;
+        }
+    });
+
+    // Filter data based on search query
     function searchTable() {
         const query = searchQuery.toLowerCase().trim();
         if (!query) {
@@ -190,32 +196,33 @@
         }
 
         filteredData = data.filter(row => {
-            const supplierName = row.supplier?.toLowerCase() || "";
-            const buyerName = row.buyer?.toLowerCase() || "";
+            const supplierName = row.supplier?.toLowerCase() || ""; 
+            const buyerName = row.buyer?.toLowerCase() || ""; 
             return supplierName.includes(query) || buyerName.includes(query);
         });
     }
 
+    // Open modal for updating data
     function openUpdateModal(row) {
-        selectedRow = row;
-        showUpdateModal = true;
-        updateData.id = row.id;
-        updateData.supplier = row.supplier || "";
-        updateData.buyer = row.buyer || "";
-        updateData.category = row.category || "";
-        updateData.partcode = row.partcode || "";
-        updateData.serial_number = row.serial_number || "";
-        updateData.quantity = row.quantity || "";
-        updateData.unit_price_per_qty = row.unit_price_per_qty || "";
-        updateData.po_date = row.po_date ? new Date(row.po_date).toISOString().split('T')[0] : "";
-        updateData.invoice_date = row.invoice_date ? new Date(row.invoice_date).toISOString().split('T')[0] : "";
-        updateData.received_date = row.received_date ? new Date(row.received_date).toISOString().split('T')[0] : "";
-        updateData.po_no = row.po_no || "";
-        updateData.invoice_no = row.invoice_no || "";
-        updateData.warranty = row.warranty || "";
-    }
-</script>
+    selectedRow = row;
+    showUpdateModal = true;
+    updateData.id = row.id;
+    updateData.supplier = row.supplier || "";
+    updateData.buyer = row.buyer || "";
+    updateData.category = row.category || "";
+    updateData.partcode = row.partcode || "";
+    updateData.serial_number = row.serial_number || "";
+    updateData.qty = row.qty || "";
+    updateData.unit_price_per_qty = row.unit_price_per_qty || "";
+    updateData.po_date = row.po_date ? new Date(row.po_date).toISOString().split('T')[0] : "";
+    updateData.invoice_date = row.invoice_date ? new Date(row.invoice_date).toISOString().split('T')[0] : "";
+    updateData.received_date = row.received_date ? new Date(row.received_date).toISOString().split('T')[0] : "";
+    updateData.po_no = row.po_no || "";
+    updateData.invoice_no = row.invoice_no || "";
+    updateData.warranty = row.warranty || "";
+}
 
+</script>
 
 
 
