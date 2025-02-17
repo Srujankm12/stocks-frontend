@@ -73,10 +73,11 @@
         });
 
         if (response.ok) {
-            console.log("Inward updated successfully");
-            showUpdateModal = false; 
-            selectedRow = null;
-            fetchData(); 
+                console.log("Stock updated successfully");
+                showUpdateModal = false;
+                selectedRow = null;
+                await fetchData(); 
+          
         } else {
             const errorMessage = await response.text();  
             console.error("Failed to update inwarddata:", errorMessage);
@@ -168,15 +169,14 @@
     }
 
     // Fetch data and set filtered data
-    onMount(async () => {
-    
+    async function fetchData() {
         try {
             const response = await fetch(apiUrl);
             if (response.ok) {
                 const jsonResponse = await response.json();
                 data = Array.isArray(jsonResponse) ? jsonResponse : [jsonResponse];
-                filteredData = [...data];  // Initialize filtered data
-                console.log(filteredData);
+                console.log(data);
+                filteredData = [...data];
             } else {
                 console.error("Failed to fetch data:", response.statusText);
             }
@@ -185,7 +185,9 @@
         } finally {
             isLoading = false;
         }
-    });
+    }
+
+    onMount(fetchData);
 
     // Filter data based on search query
     function searchTable() {
