@@ -343,8 +343,8 @@
             <!-- Column 1 -->
             <div>
                 <label for="supplier" class="block text-sm font-medium text-gray-700">Supplier</label>
-                <select id="supplier" bind:value={updateData.supplier} class="w-full p-2 border border-gray-300 rounded-md">
-                    <option value="">Select Supplier</option>
+                <select id="supplier" bind:value={updateData.supplier} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" required>
+                    <option value="" disabled>Select Supplier</option>
                     {#each suppliers as supplier}
                         <option value={supplier}>{supplier}</option>
                     {/each}
@@ -352,8 +352,8 @@
             </div>
             <div>
                 <label for="buyer" class="block text-sm font-medium text-gray-700">Buyer</label>
-                <select id="buyer" bind:value={updateData.buyer} class="w-full p-2 border border-gray-300 rounded-md">
-                    <option value="">Select Supplier</option>
+                <select id="buyer" bind:value={updateData.buyer} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" required>
+                    <option value="" disabled>Select Supplier</option>
                     {#each buyers as buyer}
                         <option value={buyer}>{buyer}</option>
                     {/each}
@@ -361,7 +361,7 @@
             </div>
 
             <div>
-                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                <label for="category" class="block text-sm font-medium text-gray-700 focus:ring-2 focus:ring-black focus:outline-none">Category</label>
                 <select id="category" 
                         bind:value={updateData.category} 
                         class="w-full p-2 border border-gray-300 rounded-md " required>
@@ -374,41 +374,41 @@
 
             <div>
                 <label for="partcode" class="block text-sm font-medium text-gray-700">Part Code</label>
-                <input id="partcode" type="text" bind:value={updateData.partcode} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="partcode" type="text" bind:value={updateData.partcode} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="serial_number" class="block text-sm font-medium text-gray-700">Serial Number</label>
-                <input id="serial_number" type="text" bind:value={updateData.serial_number} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="serial_number" type="text" bind:value={updateData.serial_number} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input id="quantity" type="number" bind:value={updateData.qty} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="quantity" type="number" bind:value={updateData.qty} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="unit_price_per_qty" class="block text-sm font-medium text-gray-700">Unit Price Per Qty</label>
-                <input id="unit_price_per_qty" type="number" step="0.01" bind:value={updateData.unit_price_per_qty} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="unit_price_per_qty" type="number" step="0.01" bind:value={updateData.unit_price_per_qty} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="cus_po_no" class="block text-sm font-medium text-gray-700">PO No.</label>
-                <input id="cus_po_no" type="text" bind:value={updateData.po_no} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="cus_po_no" type="text" bind:value={updateData.po_no} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="po_date" class="block text-sm font-medium text-gray-700">PO Date</label>
-                <input id="po_date" type="date" bind:value={updateData.po_date} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="po_date" type="date" bind:value={updateData.po_date} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
             <div>
                 <label for="cus_invoice_no" class="block text-sm font-medium text-gray-700">Invoice No.</label>
-                <input id="cus_invoice_no" type="text" bind:value={updateData.invoice_no} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="cus_invoice_no" type="text" bind:value={updateData.invoice_no} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
             <div>
                 <label for="cus_invoice_date" class="block text-sm font-medium text-gray-700">Invoice Date</label>
-                <input id="cus_invoice_date" type="date" bind:value={updateData.invoice_date} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="cus_invoice_date" type="date" bind:value={updateData.invoice_date} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
          
@@ -417,13 +417,13 @@
 
             <div>
                 <label for="received_date" class="block text-sm font-medium text-gray-700">Recieved Date</label>
-                <input id="received_date" type="date" bind:value={updateData.received_date} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="received_date" type="date" bind:value={updateData.received_date} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
            
 
             <div>
                 <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty</label>
-                <input id="warranty" type="number" bind:value={updateData.warranty} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="warranty" type="number" bind:value={updateData.warranty} class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:outline-none" />
             </div>
 
           
@@ -431,7 +431,7 @@
 
         <div class="mt-6 flex justify-end gap-4">
             <button on:click={() => showUpdateModal = false} class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">Cancel</button>
-       <button on:click={updateInwardData} class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button> 
+       <button on:click={updateInwardData} class="px-4 py-2 bg-black text-white rounded-md ">Save</button> 
         </div>
 
         <!-- Close Button -->
