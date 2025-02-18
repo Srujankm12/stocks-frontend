@@ -423,7 +423,7 @@
 
             <div>
                 <label for="warranty" class="block text-sm font-medium text-gray-700">Warranty</label>
-                <input id="warranty" type="text" bind:value={updateData.warranty} class="w-full p-2 border border-gray-300 rounded-md" />
+                <input id="warranty" type="number" bind:value={updateData.warranty} class="w-full p-2 border border-gray-300 rounded-md" />
             </div>
 
           
