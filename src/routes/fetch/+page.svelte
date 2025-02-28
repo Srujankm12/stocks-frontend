@@ -12,7 +12,7 @@
         error = "";
 
         try {
-            const response = await fetch("https://stocks-backend-t2bh.onrender.com/material", {
+            const response = await fetch("https://stocks-backend-7kkd.onrender.com/material", {
                 method: "POST"
             });
 

@@ -61,9 +61,9 @@ function openUpdateModal(row) {
 
     }
 
-    const apiUrl = "https://stocks-backend-t2bh.onrender.com/fetchoutward";
-    const downloadexcelmo = "https://stocks-backend-t2bh.onrender.com/downloadoutward";
-    const updateurl = "https://stocks-backend-t2bh.onrender.com/updateoutward";
+    const apiUrl = "https://stocks-backend-7kkd.onrender.com/fetchoutward";
+    const downloadexcelmo = "https://stocks-backend-7kkd.onrender.com/downloadoutward";
+    const updateurl = "https://stocks-backend-7kkd.onrender.com/updateoutward";
 
     async function updateOutwardData(event) {
         event.preventDefault();
@@ -114,7 +114,7 @@ function openUpdateModal(row) {
     async function fetchDropdownData() {
         isLoading = true;
         try {
-            const response = await fetch('https://stocks-backend-t2bh.onrender.com/outwardDropdown', { method: 'GET' });
+            const response = await fetch('https://stocks-backend-7kkd.onrender.com/outwardDropdown', { method: 'GET' });
             if (response.ok) {
                 const data = await response.json();
                 sellers = [...new Set(data.map(item => item.seller))];

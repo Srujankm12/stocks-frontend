@@ -29,12 +29,11 @@
         invoice_date: "",
         received_date : "",
         warranty: ""
-     
     };
 
-    const apiUrl = "https://stocks-backend-t2bh.onrender.com/getlist";
-    const downlaodUrl = "https://stocks-backend-t2bh.onrender.com/downloadinward";
-    const updateurl = "https://stocks-backend-t2bh.onrender.com/update";
+    const apiUrl = "https://stocks-backend-7kkd.onrender.com/getlist";
+    const downlaodUrl = "https://stocks-backend-7kkd.onrender.com/downloadinward";
+    const updateurl = "https://stocks-backend-7kkd.onrender.com/update";
 
     let suppliers = [];
     let buyers = [];
@@ -89,10 +88,9 @@
 
     const fetchSuppliersAndBuyers = async () => {
         try {
-            const response = await fetch('https://stocks-backend-t2bh.onrender.com/inward', 
+            const response = await fetch('https://stocks-backend-7kkd.onrender.com/inward', 
             {
                  method: 'GET'
-
                  });
 
             if (response.ok) {
@@ -170,7 +168,7 @@
             .replace(/(AM|PM)/g, (match) => ` ${match}`);
     }
 
-    // Fetch data and set filtered data
+
     async function fetchData() {
         try {
             const response = await fetch(apiUrl);
@@ -191,7 +189,7 @@
 
     onMount(fetchData);
 
-    // Filter data based on search query
+
     function searchTable() {
         const query = searchQuery.toLowerCase().trim();
         if (!query) {
@@ -206,7 +204,7 @@
         });
     }
 
-    // Open modal for updating data
+
     function openUpdateModal(row) {
     selectedRow = row;
     showUpdateModal = true;
@@ -228,12 +226,8 @@
 
 </script>
 
-
-
 <div class="min-h-screen flex flex-col bg-white ">
     <Header />
-
-
     <main class="flex-grow py-28 px-2">
         <div class="relative w-full flex justify-end bg-white">
             <input
@@ -279,7 +273,7 @@
                                 <td colspan="16" class="py-4 text-center text-gray-600">No data available</td>
                             </tr>
                         {:else}
-                            {#each filteredData as row, index(row.id)  }
+                            {#each filteredData as row, index(row.id)}
                                 <tr class="border-t border-gray-300 hover:bg-gray-200">
                               <td class="py-3 px-4 text-center">{index + 1}</td>
                                     <td class="py-3 px-4 whitespace-nowrap">{row.timestamp}</td>
